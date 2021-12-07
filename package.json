@@ -23,6 +23,13 @@
   "homepage": "https://github.com/thuanneotime/react-native-streaming#readme",
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-reanimated": "2.2.4",
+    "react-native-webrtc": "1.94.0",
+    "lottie-react-native": "^5.0.1",
+    "lottie-ios": "3.2.3"
+  },
+  "devDependencies": {
+    "react-native": "~0.62.2"
   }
 }
