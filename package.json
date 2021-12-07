@@ -21,6 +21,9 @@
         "url": "https://github.com/thuanneotime/react-native-streaming/issues"
     },
     "homepage": "https://github.com/thuanneotime/react-native-streaming#readme",
+    "dependencies": {
+        "react-hook-form": "^7.20.5"
+    },
     "peerDependencies": {
         "react": "*",
         "react-native": "*",
