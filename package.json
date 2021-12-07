@@ -2,7 +2,7 @@
   "name": "react-native-streaming",
   "version": "1.0.0",
   "description": "react native live streaming for mobile",
-  "main": "index.js",
+  "main": "src/index.tsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/thuanneotime/react-native-streaming/issues"
   },
-  "homepage": "https://github.com/thuanneotime/react-native-streaming#readme"
+  "homepage": "https://github.com/thuanneotime/react-native-streaming#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
 }
