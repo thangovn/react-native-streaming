@@ -61,20 +61,20 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
             setTimeout(() => {
                 refLottie.current?.play();
                 refCongra.current?.play();
-            }, 500);
 
-            opacity.value = withDelay(
-                2000,
-                withTiming(0, { duration: 4500 }, () => {
-                    scale.value = 0;
-                    opacity.value = 1;
-                    bottom.value = 0;
-                    right.value = 0;
-                }),
-            );
-            scale.value = withTiming(3, { duration: 1500 });
-            bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), { duration: 500 });
-            right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), { duration: 500 });
+                opacity.value = withDelay(
+                    2000,
+                    withTiming(0, { duration: 4500 }, () => {
+                        scale.value = 0;
+                        opacity.value = 1;
+                        bottom.value = 0;
+                        right.value = 0;
+                    }),
+                );
+                scale.value = withTiming(3, { duration: 1500 });
+                bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), { duration: 500 });
+                right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), { duration: 500 });
+            }, 1000);
         },
     }));
 
@@ -130,16 +130,11 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
                                 source={currentIcon}
                                 style={StyleSheet.absoluteFill}
                             />
-                            {Boolean(isShowCongraLottie) && (
-                                <AnimatedLottieView
-                                    ref={refCongra}
-                                    source={lottie_congratulations}
-                                    style={{
-                                        height: heightPixel(100),
-                                        alignSelf: 'center',
-                                    }}
-                                />
-                            )}
+                            <AnimatedLottieView
+                                ref={refCongra}
+                                source={lottie_congratulations}
+                                style={styles.lottieCongra}
+                            />
                         </>
                     )}
                 </Animated.View>
@@ -184,5 +179,9 @@ const styles = StyleSheet.create({
         width: widthPixel(50),
         height: widthPixel(50),
         position: 'absolute',
+    },
+    lottieCongra: {
+        height: heightPixel(100),
+        alignSelf: 'center',
     },
 });
