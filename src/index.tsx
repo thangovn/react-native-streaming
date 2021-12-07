@@ -8,29 +8,40 @@ import LiveStreaming from './LiveStreaming';
 import { IGiftItem } from './components/GiftListModal';
 
 interface Props {
-    navigation: any;
+    onCloseStream: () => void;
     data: IGiftItem[];
+    iconBox: string | number;
+    configWS: {
+        directorURL: string;
+        directorType: string;
+        streamId: string;
+        directorPayload: { streamAccountId: string; streamName: string };
+        iceServersURL: string;
+    };
 }
-const index: FC<Props> = ({ iconBox, navigation, data }) => {
+const index: FC<Props> = props => {
+    const {
+        iconBox,
+        onCloseStream,
+        data,
+        configWS: { directorURL, directorType, directorPayload, iceServersURL, streamId },
+    } = props;
     const [status, setStatus] = useState(Status.CONNECTING);
     const [connection, setConnection] = useState<any>({});
 
     const fetchData = async () => {
         try {
             const resDirector = await fetchDirector(
-                'https://director.millicast.com/api/director',
-                'subscribe',
-                {
-                    streamAccountId: 'H4CMm4',
-                    streamName: 'test-live',
-                },
+                directorURL,
+                directorType,
+                directorPayload,
                 null,
             );
-            const iceServers = await fetchIceServers('https://turn.millicast.com/webrtc/_turn');
+            const iceServers = await fetchIceServers(iceServersURL);
             const connection = await makeViewerClient(
                 console,
                 resDirector,
-                'H4CMm4',
+                streamId,
                 iceServers,
                 (err: any) => {
                     console.log('qqqq', err);
@@ -82,7 +93,7 @@ const index: FC<Props> = ({ iconBox, navigation, data }) => {
             connection.ws.close();
         }
         setStatus(Status.DISCONNECTED);
-        navigation.back();
+        onCloseStream?.();
     };
 
     return (
