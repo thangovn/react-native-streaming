@@ -10,7 +10,7 @@ import { IGiftItem } from './components/GiftListModal';
 interface Props {
     onCloseStream: () => void;
     data: IGiftItem[];
-    iconBox: string | number;
+    iconBox?: string | number;
     configWS: {
         directorURL: string;
         directorType: string;
@@ -19,7 +19,7 @@ interface Props {
         iceServersURL: string;
     };
 }
-const index: FC<Props> = props => {
+const ReactNativeStream: FC<Props> = props => {
     const {
         iconBox,
         onCloseStream,
@@ -107,4 +107,4 @@ const index: FC<Props> = props => {
     );
 };
 
-export default index;
+export default ReactNativeStream;

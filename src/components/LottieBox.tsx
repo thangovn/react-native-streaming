@@ -4,11 +4,12 @@ import AnimatedLottieView from 'lottie-react-native';
 import React, { FC } from 'react';
 import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { refGiftModal } from './GiftListModal';
+import { lottie_gift_box } from '../assets/lotties';
 
 interface Props {
-    source: string | { uri: string };
+    source?: string | { uri: string };
 }
-const LottieBox: FC<Props> = ({ source }) => {
+const LottieBox: FC<Props> = ({ source = lottie_gift_box }) => {
     const { isShowKeyboard } = useKeyboard();
     const handlePress = () => {
         Keyboard.dismiss();

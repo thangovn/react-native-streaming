@@ -1,6 +1,9 @@
+import { lottie_congratulations } from '../assets/lotties';
+import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
 import { useKeyboard } from '../hooks/useKeyboard';
+import { isIOS } from '../utils/deviceInfo';
 import {
     fontPixel,
     heightPixel,
@@ -12,24 +15,24 @@ import AnimatedLottieView from 'lottie-react-native';
 import React, { FC, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, {
+    cancelAnimation,
     useAnimatedStyle,
     useSharedValue,
     withDelay,
     withTiming,
 } from 'react-native-reanimated';
 import RNAndroidKeyboardAdjust from 'rn-android-keyboard-adjust';
-import { colors } from '../constants/colors';
-import { isIOS } from '../utils/deviceInfo';
 import Composer from './Composer';
 
 interface Props {
     data: any[];
     onSend?: ({ text }: { text: string }) => void;
-    iconBox: string | number;
+    iconBox?: string | number;
+    isShowCongraLottie?: boolean;
 }
 
 export const refChatList = React.createRef<any>();
-const ChatList: FC<Props> = ({ data, onSend, iconBox }) => {
+const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
     const renderMessageItem = ({ item, index }) => {
         return (
             <View style={styles.messageItem}>
@@ -41,29 +44,37 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox }) => {
         );
     };
     const refLottie = useRef<any>();
+    const refCongra = useRef<any>();
+
     const [currentIcon, setCurrentIcon] = useState();
 
     useImperativeHandle(refChatList, () => ({
-        startAnimation: (icon: any) => {
+        startAnimation: icon => {
+            refLottie.current?.reset();
+            refCongra.current?.reset();
+            cancelAnimation(scale);
+            cancelAnimation(right);
+            cancelAnimation(bottom);
+            cancelAnimation(opacity);
+
             setCurrentIcon(icon);
-            refLottie.current?.play();
+            setTimeout(() => {
+                refLottie.current?.play();
+                refCongra.current?.play();
+            }, 500);
 
             opacity.value = withDelay(
                 2000,
-                withTiming(0, { duration: 1000 }, () => {
+                withTiming(0, { duration: 4500 }, () => {
                     scale.value = 0;
                     opacity.value = 1;
                     bottom.value = 0;
                     right.value = 0;
                 }),
             );
-            scale.value = withTiming(3, { duration: 2000 });
-            bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), {
-                duration: 1000,
-            });
-            right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), {
-                duration: 1000,
-            });
+            scale.value = withTiming(3, { duration: 1500 });
+            bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), { duration: 500 });
+            right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), { duration: 500 });
         },
     }));
 
@@ -113,11 +124,23 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox }) => {
                 />
                 <Animated.View style={[styles.box, animationStyle]}>
                     {Boolean(currentIcon) && (
-                        <AnimatedLottieView
-                            ref={refLottie}
-                            source={currentIcon}
-                            style={StyleSheet.absoluteFill}
-                        />
+                        <>
+                            <AnimatedLottieView
+                                ref={refLottie}
+                                source={currentIcon}
+                                style={StyleSheet.absoluteFill}
+                            />
+                            {Boolean(isShowCongraLottie) && (
+                                <AnimatedLottieView
+                                    ref={refCongra}
+                                    source={lottie_congratulations}
+                                    style={{
+                                        height: heightPixel(100),
+                                        alignSelf: 'center',
+                                    }}
+                                />
+                            )}
+                        </>
                     )}
                 </Animated.View>
                 <Composer onSend={onSend} source={iconBox} />

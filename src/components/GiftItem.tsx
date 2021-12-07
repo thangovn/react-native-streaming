@@ -19,7 +19,9 @@ const GiftItem = ({ icon, name, currency, onPress, hasPicked, number }) => {
 
     useEffect(() => {
         const interactionPromise = InteractionManager.runAfterInteractions(() =>
-            ref.current?.play(),
+            setTimeout(() => {
+                ref.current?.play();
+            }, 1000),
         );
         return () => interactionPromise.cancel();
     }, []);

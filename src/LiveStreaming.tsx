@@ -2,10 +2,10 @@ import AnimatedLottieView from 'lottie-react-native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
+    cancelAnimation,
     useAnimatedStyle,
     useSharedValue,
     withDelay,
-    withSequence,
     withSpring,
     withTiming,
 } from 'react-native-reanimated';
@@ -17,7 +17,7 @@ import { colors } from './constants/colors';
 import { defaultStyle } from './constants/defaultStyle';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
 import { Status } from './enums/status';
-import { fontPixel, heightPixel, pixelSizeHorizontal, widthPixel } from './utils/scaling';
+import { heightPixel, pixelSizeHorizontal } from './utils/scaling';
 
 const arr = new Array(50)
     .fill('')
@@ -27,7 +27,7 @@ interface Props {
     status: Status;
     connection: any | {};
     onClose: () => void;
-    iconBox: string | number;
+    iconBox?: string | number;
     data: IGiftItem[];
 }
 
@@ -51,11 +51,14 @@ export default ({ status, connection, onClose, iconBox, data }: Props) => {
     });
 
     const handleDonate = (gift: any) => {
+        cancelAnimation(a);
+        cancelAnimation(opacity);
         setLottieIcon(gift.icon);
-        a.value = withSequence(withSpring(0), withSpring(-WIDTH_SCREEN));
+        a.value = withSpring(0);
+        a.value = withDelay(5000, withSpring(-WIDTH_SCREEN));
         opacity.value = withDelay(
             1000,
-            withTiming(0, { duration: 1000 }, () => {
+            withTiming(0, { duration: 5000 }, () => {
                 opacity.value = 1;
                 a.value = WIDTH_SCREEN;
             }),
@@ -100,27 +103,5 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: HEIGHT_SCREEN / 2 - heightPixel(16),
         marginLeft: pixelSizeHorizontal(16),
-    },
-    wrapGiftInfo: {
-        backgroundColor: colors.light.DUSTY_GRAY,
-        padding: fontPixel(8),
-        borderRadius: fontPixel(16),
-        ...defaultStyle.flexRow,
-        width: WIDTH_SCREEN / 1.7,
-    },
-    wrapLottieAni: {
-        ...defaultStyle.flexRow,
-        position: 'absolute',
-        right: widthPixel(8),
-    },
-    lottie: {
-        maxWidth: widthPixel(56),
-        height: widthPixel(56),
-        bottom: heightPixel(4),
-    },
-    countGift: {
-        ...defaultStyle.subButton,
-        color: colors.light.SUPPER_NOVA,
-        alignSelf: 'center',
     },
 });
