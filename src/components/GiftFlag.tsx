@@ -56,7 +56,7 @@ const GiftFlag = React.forwardRef(({}, ref?: any) => {
                 <LinearGradient
                     style={styles.linear}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 1.4, y: 0 }}
+                    end={{ x: 1.3, y: 0 }}
                     colors={[
                         colors.light.INDIGO,
                         colors.light.ASTRAL,
@@ -90,12 +90,13 @@ const styles = StyleSheet.create({
         height: heightPixel(36),
         paddingHorizontal: pixelSizeHorizontal(16),
         overflow: 'visible',
-        borderRadius: fontPixel(20),
         ...defaultStyle.flexRow,
     },
     linear: {
         ...StyleSheet.absoluteFillObject,
         borderRadius: fontPixel(20),
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
     },
     lottieIcon: {
         maxWidth: widthPixel(60),
