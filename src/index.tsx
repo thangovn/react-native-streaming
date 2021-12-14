@@ -3,10 +3,13 @@ import { BackHandler } from 'react-native';
 import { refComposer } from './components/Composer';
 import { IGiftItem } from './components/GiftListModal';
 import withViewerStreaming from './hoc/withViewerStreaming';
+import withHostStreaming from './hoc/withHostLiveStreaming';
 import { useWebSockets } from './hooks/useWebSockets';
 import LiveStreaming from './LiveStreaming';
+import GiftFlag from './components/GiftFlag';
+import SwipeList from './components/SwipeList';
 
-interface Props {
+export interface ReactNativeStreamProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
     data: IGiftItem[];
@@ -17,11 +20,12 @@ interface Props {
     };
     _userInfoSocketChat: {
         user_name: string;
-        user_id: number;
+        user_id: string | number | any;
         chanel_id: string;
     };
 }
-const ReactNativeStream: FC<Props> = props => {
+export { GiftFlag, SwipeList, withHostStreaming };
+const ReactNativeStream: FC<ReactNativeStreamProps> = (props: any) => {
     const {
         iconBox,
         onCloseStream,

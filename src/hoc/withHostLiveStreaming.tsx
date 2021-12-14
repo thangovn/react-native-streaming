@@ -1,4 +1,4 @@
-import { isAndroid } from '../utils/deviceInfo';
+import { isAndroid, isIOS } from '../utils/deviceInfo';
 import React from 'react';
 import { PermissionsAndroid } from 'react-native';
 import RtcEngine, {
@@ -22,8 +22,27 @@ interface State {
     connectionState: ConnectionStateType;
 }
 
+const requestCameraAndAudioPermission = async () => {
+    try {
+        const granted = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ]);
+        if (
+            granted['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED &&
+            granted['android.permission.CAMERA'] === PermissionsAndroid.RESULTS.GRANTED
+        ) {
+            console.log('You can use the cameras & mic');
+        } else {
+            console.log('Permission denied');
+        }
+    } catch (err) {
+        console.warn(err);
+    }
+};
+
 export default (WrappedComponent: any) => {
-    class ViewerStreaming extends React.PureComponent<ReactNativeStreamProps> {
+    class HostLiveStreaming extends React.PureComponent<ReactNativeStreamProps> {
         _engine?: RtcEngine;
 
         state: State = {
@@ -37,15 +56,14 @@ export default (WrappedComponent: any) => {
 
         componentDidMount() {
             if (isAndroid) {
-                PermissionsAndroid.requestMultiple([
-                    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                    PermissionsAndroid.PERMISSIONS.CAMERA,
-                ]);
+                requestCameraAndAudioPermission().then(() => {
+                    console.log('requested!');
+                });
             }
         }
 
-        _startCall = async (channelName: string) => {
-            await this._engine?.joinChannel(this.state.token, channelName, null, 0);
+        _startCall = async (channelName: string, uid: number) => {
+            await this._engine?.joinChannel(this.state.token, channelName, null, uid);
         };
 
         _endCall = async () => {
@@ -69,12 +87,19 @@ export default (WrappedComponent: any) => {
         init = async (appId: string) => {
             this._engine = await RtcEngine.create(appId);
 
+            // Enable the video module.
             await this._engine.enableVideo();
 
+            // Enable the local video preview.
+            await this._engine.startPreview();
+
+            await this._engine.setBeautyEffectOptions(true, {});
+
+            // await this._engine.enableVirtualBackground(true, {});
             // Set the channel profile as live streaming.
             await this._engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
             // Set the usr role as host.
-            await this._engine.setClientRole(ClientRole.Audience);
+            await this._engine.setClientRole(ClientRole.Broadcaster);
 
             // Listen for the UserJoined callback.
             // This callback occurs when the remote user successfully joins the channel.
@@ -106,7 +131,9 @@ export default (WrappedComponent: any) => {
                 this.setState({
                     joinSucceed: true,
                 });
-                await this._engine.setEnableSpeakerphone(true);
+
+                await this._engine.muteAllRemoteAudioStreams(true);
+                await this._engine.muteAllRemoteVideoStreams(true);
             });
 
             // this._engine.addListener('Warning', warn => console.log('Warn', warn));
@@ -135,5 +162,5 @@ export default (WrappedComponent: any) => {
         }
     }
 
-    return ViewerStreaming;
+    return HostLiveStreaming;
 };
