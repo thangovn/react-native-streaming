@@ -1,27 +1,37 @@
-import { IndicatorLoading } from '@components/IndicatorLoading';
+import { IndicatorLoading } from './IndicatorLoading';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
+import { map } from 'lodash';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { RTCView } from 'react-native-webrtc';
+import { ConnectionStateType, RtcRemoteView, VideoRenderMode } from 'react-native-agora';
 import Header from './Header';
 
-const LiveStreamPlayer = ({ status = 'connecting', onClose, connection }) => {
+const LiveStreamPlayer = ({ onClose, connection, concurrent, peerIds, channelName }) => {
     return (
         <>
-            <Header onPress={onClose} />
-            {status === 'connecting' ? (
+            <Header onPress={onClose} concurrent={concurrent} />
+            {connection === ConnectionStateType.Connecting ? (
                 <IndicatorLoading backgroundColor={colors.light.MIRAGE} />
-            ) : status === 'connected' ? (
-                <RTCView streamURL={connection?.stream?.toURL()} style={styles.img} />
-            ) : status === 'fail' ? (
+            ) : connection === ConnectionStateType.Connected && Boolean(peerIds.length) ? (
+                map(peerIds, (value: number) => (
+                    <RtcRemoteView.SurfaceView
+                        style={styles.remoteView}
+                        key={value}
+                        uid={value}
+                        channelId={channelName}
+                        renderMode={VideoRenderMode.Hidden}
+                        zOrderMediaOverlay={true}
+                    />
+                ))
+            ) : connection === ConnectionStateType.Disconnected ? (
                 <View style={styles.flex}>
-                    <Text style={styles.failText}>{'Stream Lost Connect'}</Text>
+                    <Text style={styles.failText}>{'Stream Disconnected'}</Text>
                 </View>
             ) : (
                 <View style={styles.flex}>
-                    <Text style={styles.failText}>{'Stream has closed'}</Text>
+                    <Text style={styles.failText}>{'Stream Closed'}</Text>
                 </View>
             )}
         </>
@@ -31,12 +41,6 @@ const LiveStreamPlayer = ({ status = 'connecting', onClose, connection }) => {
 export default React.memo(LiveStreamPlayer);
 
 const styles = StyleSheet.create({
-    img: {
-        transform: [{ scale: 4 }],
-        position: 'absolute',
-        width: WIDTH_SCREEN,
-        height: HEIGHT_SCREEN,
-    },
     failText: {
         ...defaultStyle.button2,
         color: colors.light.White,
@@ -46,5 +50,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.light.MIRAGE,
+    },
+    remoteView: {
+        position: 'absolute',
+        width: WIDTH_SCREEN,
+        height: HEIGHT_SCREEN,
     },
 });

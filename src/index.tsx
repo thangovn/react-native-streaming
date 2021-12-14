@@ -1,81 +1,47 @@
-import { Status } from './enums/status';
-import { fetchDirector, fetchIceServers, makeViewerClient } from './utils/WSLiveStream';
-import { isEmpty } from 'lodash';
-import React, { useEffect, useState, FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { BackHandler } from 'react-native';
-import InCallManager from 'react-native-incall-manager';
-import LiveStreaming from './LiveStreaming';
+import { refComposer } from './components/Composer';
 import { IGiftItem } from './components/GiftListModal';
+import withViewerStreaming from './hoc/withViewerStreaming';
+import { useWebSockets } from './hooks/useWebSockets';
+import LiveStreaming from './LiveStreaming';
 
 interface Props {
     onCloseStream: () => void;
+    onReceiveGift: (gift: any) => void;
     data: IGiftItem[];
     iconBox?: string | number;
-    configWS: {
-        directorURL: string;
-        directorType: string;
-        streamId: string;
-        directorPayload: { streamAccountId: string; streamName: string };
-        iceServersURL: string;
+    configLiveStream: {
+        appId: string;
+        channelName: string;
+    };
+    _userInfoSocketChat: {
+        user_name: string;
+        user_id: number;
+        chanel_id: string;
     };
 }
 const ReactNativeStream: FC<Props> = props => {
     const {
         iconBox,
         onCloseStream,
+        onReceiveGift,
         data,
-        configWS: { directorURL, directorType, directorPayload, iceServersURL, streamId },
+        configLiveStream: { appId, channelName },
+        _userInfoSocketChat,
     } = props;
-    const [status, setStatus] = useState(Status.CONNECTING);
-    const [connection, setConnection] = useState<any>({});
 
-    const fetchData = async () => {
-        try {
-            const resDirector = await fetchDirector(
-                directorURL,
-                directorType,
-                directorPayload,
-                null,
-            );
-            const iceServers = await fetchIceServers(iceServersURL);
-            const connection = await makeViewerClient(
-                console,
-                resDirector,
-                streamId,
-                iceServers,
-                (err: any) => {
-                    console.log('qqqq', err);
-                    setStatus(Status.FAIL);
-                },
-            ).catch(err => console.log(err, 'log connect catch'));
-            setConnection(connection);
-            setStatus(Status.CONNECTED);
-        } catch (error) {
-            // console.log('qqqq');
-            setStatus(Status.FAIL);
-        }
+    const init = async () => {
+        await props.init(appId);
+
+        setTimeout(() => {
+            props.startCall(channelName);
+        }, 2000);
     };
 
     useEffect(() => {
-        fetchData();
+        init();
     }, []);
-
-    useEffect(() => {
-        if (status === Status.CONNECTED) {
-            try {
-                InCallManager.start({ media: 'audio' });
-                InCallManager.setForceSpeakerphoneOn(true);
-                InCallManager.setSpeakerphoneOn(true);
-            } catch (err) {
-                console.log('InApp Caller ---------------------->', err);
-            }
-        }
-
-        return () => {
-            InCallManager.setForceSpeakerphoneOn(false);
-            InCallManager.setSpeakerphoneOn(false);
-        };
-    }, [status]);
 
     useEffect(() => {
         const backAction = () => {
@@ -87,24 +53,41 @@ const ReactNativeStream: FC<Props> = props => {
         return () => backHandler.remove();
     }, []);
 
-    const onClose = () => {
-        if (!isEmpty(connection)) {
-            connection.pc.close();
-            connection.ws.close();
-        }
-        setStatus(Status.DISCONNECTED);
-        onCloseStream?.();
+    const onClose = async () => {
+        await props.endCall();
+        setTimeout(() => {
+            onCloseStream?.();
+        }, 500);
     };
+
+    const onSend = ({ text }) => {
+        if (!text) return;
+        send({ message: text });
+        refComposer.current?.reset();
+    };
+
+    const handleDonate = (gift: any) => {
+        send_gift(gift);
+    };
+
+    const { send, messages, concurrent, send_gift } = useWebSockets({
+        enabled: true,
+        _userInfo: _userInfoSocketChat,
+        onReceiveGift,
+    });
 
     return (
         <LiveStreaming
+            onDonate={handleDonate}
+            onSend={onSend}
             iconBox={iconBox}
-            status={status}
-            connection={connection}
             onClose={onClose}
             data={data}
+            messages={messages}
+            concurrent={concurrent}
+            {...props}
         />
     );
 };
 
-export default ReactNativeStream;
+export default withViewerStreaming(ReactNativeStream);

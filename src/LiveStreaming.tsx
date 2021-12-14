@@ -1,53 +1,37 @@
-import { Status } from './enums/status';
-import { defaultStyle } from './constants/defaultStyle';
-import React, { useRef, useState } from 'react';
+import { defaultStyle } from '@constants/defaultStyle';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { refComposer } from './components/Composer';
+import { ConnectionStateType } from 'react-native-agora';
 import GiftFlag from './components/GiftFlag';
-import GiftListModal, { IGiftItem } from './components/GiftListModal';
+import GiftListModal from './components/GiftListModal';
 import LiveStreamPlayer from './components/LiveStreamPlayer';
 import SwipeList from './components/SwipeList';
 
-const arr = new Array(50)
-    .fill('')
-    .map((item, index) => ({ id: index, username: 'David', message: 'Have a nice day!' }));
-interface Props {
-    status: Status;
-    connection: any | {};
-    onClose: () => void;
-    iconBox?: string | number;
-    data: IGiftItem[];
-}
-
-const LiveStreaming = ({ status, connection, onClose, iconBox, data }: Props) => {
-    const [dataMessage, setDataMessage] = useState([...arr]);
-    const regGiftFlag = useRef<any>();
-
-    const onSend = ({ text }) => {
-        if (!text) return;
-        setDataMessage([{ id: Math.random(), username: 'David', message: text }, ...dataMessage]);
-        refComposer.current?.reset();
-    };
-
-    const handleDonate = (gift: any) => {
-        regGiftFlag.current?.startAnimation(gift.icon);
-    };
-
+const RoomDetailComp = props => {
+    const { onClose, onSend, messages, onDonate, giftData, iconBox, concurrent, ...otherProps } =
+        props;
     return (
         <View style={styles.container}>
-            <LiveStreamPlayer status={status} onClose={onClose} connection={connection} />
-            {status === Status.CONNECTED && (
-                <>
-                    <GiftFlag ref={regGiftFlag} />
-                    <SwipeList dataMessage={dataMessage} onSend={onSend} iconBox={iconBox} />
-                    <GiftListModal onDonate={handleDonate} data={data} />
-                </>
-            )}
+            <LiveStreamPlayer
+                onClose={onClose}
+                connection={otherProps.connectionState}
+                concurrent={concurrent}
+                peerIds={otherProps.peerIds}
+                channelName={otherProps.channelName}
+            />
+            {otherProps.connectionState === ConnectionStateType.Connected &&
+                Boolean(otherProps.peerIds.length) && (
+                    <>
+                        <GiftFlag />
+                        <SwipeList dataMessage={messages} onSend={onSend} iconBox={iconBox} />
+                        <GiftListModal onDonate={onDonate} data={giftData} />
+                    </>
+                )}
         </View>
     );
 };
 
-export default React.memo(LiveStreaming);
+export default React.memo(RoomDetailComp);
 
 const styles = StyleSheet.create({
     container: {

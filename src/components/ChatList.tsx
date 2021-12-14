@@ -1,4 +1,5 @@
-import { lottie_congratulations } from '../assets/lotties';
+import { lottie_confetti } from '../assets/lotties';
+import { GiftType } from '../enums/giftType';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
@@ -11,14 +12,15 @@ import {
     pixelSizeVertical,
     widthPixel,
 } from '../utils/scaling';
+import { isEmpty } from 'lodash';
 import AnimatedLottieView from 'lottie-react-native';
 import React, { FC, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Animated, {
     cancelAnimation,
     useAnimatedStyle,
     useSharedValue,
-    withDelay,
     withTiming,
 } from 'react-native-reanimated';
 import RNAndroidKeyboardAdjust from 'rn-android-keyboard-adjust';
@@ -27,54 +29,55 @@ import Composer from './Composer';
 interface Props {
     data: any[];
     onSend?: ({ text }: { text: string }) => void;
-    iconBox?: string | number;
-    isShowCongraLottie?: boolean;
 }
 
+let timeout;
 export const refChatList = React.createRef<any>();
-const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
+const ChatList: FC<Props> = ({ data, onSend }) => {
     const renderMessageItem = ({ item, index }) => {
         return (
             <View style={styles.messageItem}>
                 <Text style={[defaultStyle.subButton, { color: colors.light.MainColor }]}>
-                    {`${item.username}: `}
+                    {`${item.user_name}: `}
                 </Text>
                 <Text style={styles.messageText}>{item.message}</Text>
             </View>
         );
     };
     const refLottie = useRef<any>();
-    const refCongra = useRef<any>();
+    const refConfetti = useRef<any>();
 
-    const [currentIcon, setCurrentIcon] = useState();
+    const [currentIcon, setCurrentIcon] = useState<any>();
 
     useImperativeHandle(refChatList, () => ({
-        startAnimation: icon => {
+        startAnimation: (icon: any) => {
             refLottie.current?.reset();
-            refCongra.current?.reset();
+            refConfetti.current?.reset();
             cancelAnimation(scale);
             cancelAnimation(right);
             cancelAnimation(bottom);
             cancelAnimation(opacity);
+            cancelAnimation(opacityConfetti);
+            clearTimeout(timeout);
 
             setCurrentIcon(icon);
-            setTimeout(() => {
+            timeout = setTimeout(() => {
                 refLottie.current?.play();
-                refCongra.current?.play();
+                refConfetti.current?.play();
 
-                opacity.value = withDelay(
-                    2000,
-                    withTiming(0, { duration: 4500 }, () => {
-                        scale.value = 0;
-                        opacity.value = 1;
-                        bottom.value = 0;
-                        right.value = 0;
-                    }),
-                );
+                opacity.value = withTiming(0, { duration: 4000 }, () => {
+                    scale.value = 0;
+                    opacity.value = 1;
+                    bottom.value = 0;
+                    right.value = 0;
+                });
+                opacityConfetti.value = withTiming(0, { duration: 6000 }, () => {
+                    opacityConfetti.value = 1;
+                });
                 scale.value = withTiming(3, { duration: 1500 });
                 bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), { duration: 500 });
                 right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), { duration: 500 });
-            }, 1000);
+            }, 600);
         },
     }));
 
@@ -82,6 +85,7 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
     const bottom = useSharedValue(0);
     const right = useSharedValue(0);
     const opacity = useSharedValue(1);
+    const opacityConfetti = useSharedValue(1);
 
     const animationStyle = useAnimatedStyle(() => {
         return {
@@ -89,6 +93,12 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
             bottom: bottom.value,
             right: right.value,
             opacity: opacity.value,
+        };
+    });
+
+    const animationConfettiStyle = useAnimatedStyle(() => {
+        return {
+            opacity: opacityConfetti.value,
         };
     });
 
@@ -121,24 +131,40 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
                     renderItem={renderMessageItem}
                     inverted
                     style={styles.containFlatList}
+                    showsVerticalScrollIndicator={false}
                 />
                 <Animated.View style={[styles.box, animationStyle]}>
-                    {Boolean(currentIcon) && (
+                    {!isEmpty(currentIcon) ? (
                         <>
-                            <AnimatedLottieView
-                                ref={refLottie}
-                                source={currentIcon}
-                                style={StyleSheet.absoluteFill}
-                            />
-                            <AnimatedLottieView
-                                ref={refCongra}
-                                source={lottie_congratulations}
-                                style={styles.lottieCongra}
-                            />
+                            {(currentIcon.type || currentIcon.gift_data.type) === GiftType.GIF ? (
+                                <FastImage
+                                    source={{
+                                        uri: currentIcon.url
+                                            ? currentIcon.url
+                                            : currentIcon.gift_data.url,
+                                    }}
+                                    style={StyleSheet.absoluteFill}
+                                />
+                            ) : (
+                                <AnimatedLottieView
+                                    ref={refLottie}
+                                    source={currentIcon.resource || currentIcon.gift_data.resource}
+                                    style={StyleSheet.absoluteFill}
+                                />
+                            )}
                         </>
-                    )}
+                    ) : null}
                 </Animated.View>
-                <Composer onSend={onSend} source={iconBox} />
+                <Animated.View style={[styles.wrapConfetti, animationConfettiStyle]}>
+                    <AnimatedLottieView
+                        loop={false}
+                        resizeMode={'cover'}
+                        ref={refConfetti}
+                        source={lottie_confetti}
+                        style={styles.lottieConfetti}
+                    />
+                </Animated.View>
+                <Composer onSend={onSend} />
             </View>
         </KeyboardAvoidingView>
     );
@@ -147,6 +173,11 @@ const ChatList: FC<Props> = ({ data, onSend, iconBox, isShowCongraLottie }) => {
 export default React.memo(ChatList);
 
 const styles = StyleSheet.create({
+    wrapConfetti: {
+        width: WIDTH_SCREEN,
+        height: HEIGHT_SCREEN,
+        position: 'absolute',
+    },
     inner: {
         padding: fontPixel(16),
         flex: 1,
@@ -154,10 +185,11 @@ const styles = StyleSheet.create({
     },
     containFlatList: {
         maxHeight: heightPixel(300),
+        zIndex: 999,
     },
     messageItem: {
         ...defaultStyle.flexRow,
-        backgroundColor: 'rgba(0, 0, 0, .5)',
+        backgroundColor: colors.BLACK_30,
         marginVertical: pixelSizeVertical(4),
         borderRadius: fontPixel(20),
         paddingVertical: pixelSizeVertical(4),
@@ -166,7 +198,7 @@ const styles = StyleSheet.create({
     },
     messageText: {
         ...defaultStyle.subButton,
-        color: colors.WHITE,
+        color: colors.light.White,
         alignSelf: 'flex-start',
         maxWidth: WIDTH_SCREEN / 1.5,
     },
@@ -180,8 +212,7 @@ const styles = StyleSheet.create({
         height: widthPixel(50),
         position: 'absolute',
     },
-    lottieCongra: {
-        height: heightPixel(100),
-        alignSelf: 'center',
+    lottieConfetti: {
+        ...StyleSheet.absoluteFillObject,
     },
 });

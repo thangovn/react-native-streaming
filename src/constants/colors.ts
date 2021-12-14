@@ -6,6 +6,7 @@ export const colors = {
     WHITE: '#FFFFFF',
     RED: '#FF2D55',
     PINK_50: '#FF00A8',
+    BLACK_30: 'rgba(0, 0, 0, .3)',
 
     light: {
         MainColor: '#436BE8',
