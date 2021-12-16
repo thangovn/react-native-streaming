@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image';
 import { pixelSizeVertical } from 'react-native-streaming/src/utils/scaling';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const CardDashboard = ({ onSelectGame, url, nameGame }) => {
+const CardDashboard = ({ onSelectGame, url, nameGame, channelLive }) => {
     return (
         <View style={styles.container}>
             <FastImage source={{ uri: url }} style={styles.img} />
@@ -16,6 +16,7 @@ const CardDashboard = ({ onSelectGame, url, nameGame }) => {
                     style={styles.input}
                     placeholder={'Live chanel...'}
                     placeholderTextColor={colors.light.DUSTY_GRAY}
+                    value={channelLive}
                 />
                 <View style={{ flex: 1 }} />
                 <Pressable style={defaultStyle.flexRow} onPress={onSelectGame}>

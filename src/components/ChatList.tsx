@@ -72,7 +72,7 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                     bottom.value = 0;
                     right.value = 0;
                 });
-                opacityConfetti.value = withTiming(0, { duration: 6000 }, () => {
+                opacityConfetti.value = withTiming(0, { duration: 8000 }, () => {
                     opacityConfetti.value = 1;
                 });
                 scale.value = withTiming(3, { duration: 1500 });

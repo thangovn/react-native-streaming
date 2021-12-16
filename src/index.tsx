@@ -129,6 +129,7 @@ export interface RNBroadCasterStreamingProps {
     renderWaitingView?: () => JSX.Element;
     rightIconComposer?: any;
     uid: string | number;
+    channelLive: string;
 }
 
 let timeout;
@@ -146,6 +147,7 @@ const RNBroadCasterStreaming = withHostStreaming(
             rightIconComposer,
             uid,
             onBack,
+            channelLive,
         } = props;
 
         const [countDown, setCountDown] = useState(3);
@@ -250,6 +252,7 @@ const RNBroadCasterStreaming = withHostStreaming(
                         />
                         <View style={styles.body}>
                             <CardDashboard
+                                channelLive={channelLive}
                                 onSelectGame={onSelectGame}
                                 nameGame={cardName}
                                 url={
