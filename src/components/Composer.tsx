@@ -9,7 +9,7 @@ import LottieBox from './LottieBox';
 
 interface Props {
     onSend: ({ text }: { text: string }) => void;
-    source: string | number | any;
+    source?: string | number | any;
 }
 
 export const refComposer = React.createRef<{ reset: () => void }>();
@@ -60,7 +60,7 @@ const Composer: FC<Props> = ({ onSend, source }) => {
                 defaultValue=""
             />
 
-            <LottieBox source={source} />
+            {Boolean(source) && <LottieBox source={source} />}
         </View>
     );
 };

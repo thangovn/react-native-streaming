@@ -6,7 +6,6 @@ import RtcEngine, {
     ConnectionChangedReason,
     ConnectionStateType,
 } from 'react-native-agora';
-import { ReactNativeStreamProps } from '../index';
 import { requestCameraAndAudioPermission } from '../utils/permissions';
 
 // Define a Props interface.
@@ -22,8 +21,8 @@ interface State {
     connectionState: ConnectionStateType;
 }
 
-export default (WrappedComponent: any) => {
-    class HostLiveStreaming extends React.PureComponent<ReactNativeStreamProps> {
+const withHostLiveStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+    class HostLiveStreaming extends React.PureComponent<P & any> {
         _engine?: RtcEngine;
 
         state: State = {
@@ -146,7 +145,7 @@ export default (WrappedComponent: any) => {
         render(): React.ReactNode {
             return (
                 <WrappedComponent
-                    {...this.props}
+                    {...(this.props as P)}
                     {...this.state}
                     init={this.init}
                     startCall={this._startCall}
@@ -159,3 +158,5 @@ export default (WrappedComponent: any) => {
 
     return HostLiveStreaming;
 };
+
+export default withHostLiveStreaming;

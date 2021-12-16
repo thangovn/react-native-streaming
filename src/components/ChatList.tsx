@@ -29,11 +29,12 @@ import Composer from './Composer';
 interface Props {
     data: any[];
     onSend?: ({ text }: { text: string }) => void;
+    rightIconComposer?: any;
 }
 
 let timeout;
 export const refChatList = React.createRef<{ startAnimation: (iconGift: any) => void }>();
-const ChatList: FC<Props> = ({ data, onSend }) => {
+const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
     const renderMessageItem = ({ item, index }) => {
         return (
             <View style={styles.messageItem}>
@@ -164,7 +165,7 @@ const ChatList: FC<Props> = ({ data, onSend }) => {
                         style={styles.lottieConfetti}
                     />
                 </Animated.View>
-                <Composer onSend={onSend} />
+                <Composer onSend={onSend} source={rightIconComposer} />
             </View>
         </KeyboardAvoidingView>
     );
