@@ -47,15 +47,15 @@ const RNAudienceStreaming = withAudienceStreaming(
             _userInfoSocketChat,
         } = props;
 
-        const initial = () => {
-            //  props.init(appId);
-            // setTimeout(() => {
-            //     props.startCall(channelName);
-            // }, 2000);
+        const initial = async () => {
+            await props.init(appId);
+            setTimeout(() => {
+                props.startCall(channelName);
+            }, 2000);
         };
 
         useEffect(() => {
-            // initial();
+            initial();
         }, []);
 
         const onClose = async () => {
@@ -148,14 +148,14 @@ const RNBroadCasterStreaming = withHostStreaming(
 
         const [countDown, setCountDown] = useState(3);
 
-        const init = () => {
+        const initial = () => {
             setTimeout(() => {
-                // props.init(appId);
+                props.init(appId);
             }, 100);
         };
 
         useEffect(() => {
-            init();
+            initial();
         }, []);
 
         useEffect(() => {
