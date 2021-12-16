@@ -28,14 +28,14 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         ref.current.emit('send_message', {
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
-            chanel_id: 'bacarat-18',
+            chanel_id: userInfo.chanel_id,
             message,
         });
     };
 
     const send_gift = (giftData: any) => {
         ref.current.emit('send_gift', {
-            chanel_id: 'bacarat-18',
+            chanel_id: userInfo.chanel_id,
             quantity: 99,
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
@@ -45,7 +45,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
 
     const leave_room = () => {
         ref.current.emit('leave_room', {
-            chanel_id: 'bacarat-18',
+            chanel_id: userInfo.chanel_id,
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
         });
@@ -60,7 +60,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         socket.emit('join_room', {
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
-            chanel_id: 'bacarat-18',
+            chanel_id: userInfo.chanel_id,
         });
 
         socket.on('connect', e => {
