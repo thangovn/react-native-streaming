@@ -7,6 +7,8 @@ import RtcEngine, {
     ConnectionStateType,
 } from 'react-native-agora';
 import { requestCameraAndAudioPermission } from '../utils/permissions';
+import { LiveStreamState } from './dtos';
+import { RNBroadCasterStreamingProps } from '../index';
 
 // Define a Props interface.
 interface Props {}
@@ -22,10 +24,10 @@ interface State {
 }
 
 const withHostLiveStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
-    class HostLiveStreaming extends React.PureComponent<P & any> {
+    class HostLiveStreaming extends React.PureComponent<P & RNBroadCasterStreamingProps> {
         _engine?: RtcEngine;
 
-        state: State = {
+        state: LiveStreamState = {
             token: null,
             joinSucceed: false,
             peerIds: [],

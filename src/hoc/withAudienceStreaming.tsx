@@ -8,25 +8,19 @@ import RtcEngine, {
     ConnectionStateType,
 } from 'react-native-agora';
 import { requestCameraAndAudioPermission } from '../utils/permissions';
+import { LiveStreamState } from './dtos';
+import { RNAudienceStreamingProps } from '../index';
 
 // Define a Props interface.
 interface Props {}
 
 // Define a State interface.
-interface State {
-    token: string;
-    joinSucceed: boolean;
-    peerIds: number[];
-    isHost: Boolean;
-    switchCamera: Boolean;
-    connectionState: ConnectionStateType;
-}
 
 const withAudienceStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
-    class ViewerStreaming extends React.PureComponent<P & any> {
+    class ViewerStreaming extends React.PureComponent<P & RNAudienceStreamingProps> {
         _engine?: RtcEngine;
 
-        state: State = {
+        state: LiveStreamState = {
             token: null,
             joinSucceed: false,
             peerIds: [],
