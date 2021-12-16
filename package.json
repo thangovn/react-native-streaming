@@ -26,19 +26,7 @@
     },
     "peerDependencies": {
         "react": "*",
-        "react-native": "*",
-        "react-native-reanimated": "2.2.4",
-        "react-native-webrtc": "1.94.0",
-        "lottie-react-native": "5.0.1",
-        "lottie-ios": "3.2.3",
-        "react-native-modal": ">=13.0.0",
-        "react-native-vector-icons": "9.0.0",
-        "rn-android-keyboard-adjust": "2.0.0",
-        "react-hook-form": "^7.20.5",
-        "@hookform/resolvers": "^2.8.3",
-        "lodash": "^4.17.21",
-        "react-native-fast-image": "^8.5.11",
-        "react-native-incall-manager": "3.3.0"
+        "react-native": "*"
     },
     "devDependencies": {
         "react-native": "~0.62.2"

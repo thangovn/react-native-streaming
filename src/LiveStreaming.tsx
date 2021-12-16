@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { ConnectionStateType } from 'react-native-agora';
 import GiftFlag from './components/GiftFlag';
 import GiftListModal from './components/GiftListModal';
-import LiveStreamPlayer from './components/LiveStreamPlayer';
+import AudienceView from './components/AudienceView';
 import SwipeList from './components/SwipeList';
 
 const RoomDetailComp = props => {
@@ -12,7 +12,7 @@ const RoomDetailComp = props => {
         props;
     return (
         <View style={styles.container}>
-            <LiveStreamPlayer
+            <AudienceView
                 onClose={onClose}
                 connection={otherProps.connectionState}
                 concurrent={concurrent}

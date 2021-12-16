@@ -1,6 +1,6 @@
 import { isAndroid } from '../utils/deviceInfo';
 import React from 'react';
-import { PermissionsAndroid } from 'react-native';
+import { BackHandler } from 'react-native';
 import RtcEngine, {
     ChannelProfile,
     ClientRole,
@@ -8,6 +8,7 @@ import RtcEngine, {
     ConnectionStateType,
 } from 'react-native-agora';
 import { ReactNativeStreamProps } from '../index';
+import { requestCameraAndAudioPermission } from '../utils/permissions';
 
 // Define a Props interface.
 interface Props {}
@@ -35,13 +36,26 @@ export default (WrappedComponent: any) => {
             connectionState: ConnectionStateType.Connecting,
         };
 
+        onClose = async () => {
+            await this._endCall();
+        };
+
+        backAction = () => {
+            this.onClose();
+            return true;
+        };
+
         componentDidMount() {
             if (isAndroid) {
-                PermissionsAndroid.requestMultiple([
-                    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-                    PermissionsAndroid.PERMISSIONS.CAMERA,
-                ]);
+                requestCameraAndAudioPermission().then(() => {
+                    console.log('requested!');
+                });
             }
+            this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backAction);
+        }
+
+        componentWillUnmount() {
+            this.backHandler.remove();
         }
 
         _startCall = async (channelName: string) => {

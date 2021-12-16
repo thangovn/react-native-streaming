@@ -32,7 +32,7 @@ interface Props {
 }
 
 let timeout;
-export const refChatList = React.createRef<any>();
+export const refChatList = React.createRef<{ startAnimation: (iconGift: any) => void }>();
 const ChatList: FC<Props> = ({ data, onSend }) => {
     const renderMessageItem = ({ item, index }) => {
         return (

@@ -12,7 +12,7 @@ interface Props {
     source: string | number | any;
 }
 
-export const refComposer = React.createRef<any>();
+export const refComposer = React.createRef<{ reset: () => void }>();
 const Composer: FC<Props> = ({ onSend, source }) => {
     const {
         control,

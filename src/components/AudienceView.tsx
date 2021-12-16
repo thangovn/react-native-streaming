@@ -8,7 +8,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { ConnectionStateType, RtcRemoteView, VideoRenderMode } from 'react-native-agora';
 import Header from './Header';
 
-const LiveStreamPlayer = ({ onClose, connection, concurrent, peerIds, channelName }) => {
+const AudienceView = ({ onClose, connection, concurrent, peerIds, channelName }) => {
     return (
         <>
             <Header onPress={onClose} concurrent={concurrent} />
@@ -38,7 +38,7 @@ const LiveStreamPlayer = ({ onClose, connection, concurrent, peerIds, channelNam
     );
 };
 
-export default React.memo(LiveStreamPlayer);
+export default React.memo(AudienceView);
 
 const styles = StyleSheet.create({
     failText: {

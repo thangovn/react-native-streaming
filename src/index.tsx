@@ -1,18 +1,29 @@
-import React, { FC, useEffect } from 'react';
-import { BackHandler } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { refComposer } from './components/Composer';
-import { IGiftItem } from './components/GiftListModal';
-import withViewerStreaming from './hoc/withViewerStreaming';
-import withHostStreaming from './hoc/withHostLiveStreaming';
+import GiftListModal, { IGiftItem } from './components/GiftListModal';
+import { ConnectionStateType } from 'react-native-agora';
 import { useWebSockets } from './hooks/useWebSockets';
-import LiveStreaming from './LiveStreaming';
 import GiftFlag from './components/GiftFlag';
 import SwipeList from './components/SwipeList';
+import withAudienceStreaming from './hoc/withAudienceStreaming';
+import withHostStreaming from './hoc/withHostLiveStreaming';
+import AudienceView from './components/AudienceView';
+import { refChatList } from './components/ChatList';
+import { defaultStyle } from './constants/defaultStyle';
+import BroadCasterView from './components/BroadCasterView';
+import ButtonHost from './components/ButtonHost';
+import { HeaderHost } from './components/HeaderHost';
+import CardDashboard from './components/CardDashboard';
+import { LiveHeader } from './components/LiveHeader';
+import { colors } from './constants/colors';
+import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
+import { alertOk, alertYesNo } from './utils/alert';
 
-export interface ReactNativeStreamProps {
+export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
-    data: IGiftItem[];
+    giftData: IGiftItem[];
     iconBox?: string | number;
     configLiveStream: {
         appId: string;
@@ -24,13 +35,12 @@ export interface ReactNativeStreamProps {
         chanel_id: string;
     };
 }
-export { GiftFlag, SwipeList, withHostStreaming };
-const ReactNativeStream: FC<ReactNativeStreamProps> = (props: any) => {
+const RNAudienceStreaming: FC<RNAudienceStreamingProps> = withAudienceStreaming((props: any) => {
     const {
         iconBox,
         onCloseStream,
         onReceiveGift,
-        data,
+        giftData,
         configLiveStream: { appId, channelName },
         _userInfoSocketChat,
     } = props;
@@ -45,16 +55,6 @@ const ReactNativeStream: FC<ReactNativeStreamProps> = (props: any) => {
 
     useEffect(() => {
         init();
-    }, []);
-
-    useEffect(() => {
-        const backAction = () => {
-            onClose();
-            return true;
-        };
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-
-        return () => backHandler.remove();
     }, []);
 
     const onClose = async () => {
@@ -81,17 +81,187 @@ const ReactNativeStream: FC<ReactNativeStreamProps> = (props: any) => {
     });
 
     return (
-        <LiveStreaming
-            onDonate={handleDonate}
-            onSend={onSend}
-            iconBox={iconBox}
-            onClose={onClose}
-            data={data}
-            messages={messages}
-            concurrent={concurrent}
-            {...props}
-        />
+        <View style={defaultStyle.container}>
+            <AudienceView
+                onClose={onClose}
+                connection={props.connectionState}
+                concurrent={concurrent}
+                peerIds={props.peerIds}
+                channelName={props.channelName}
+            />
+            {props.connectionState === ConnectionStateType.Connected &&
+                Boolean(props.peerIds.length) && (
+                    <>
+                        <GiftFlag />
+                        <SwipeList dataMessage={messages} onSend={onSend} iconBox={iconBox} />
+                        <GiftListModal onDonate={handleDonate} data={giftData} />
+                    </>
+                )}
+        </View>
     );
-};
+});
 
-export default withViewerStreaming(ReactNativeStream);
+export interface RNBroadCasterStreamingProps {
+    onCloseStream: () => void;
+    onSelectGame: () => void;
+    onPressAvatar: () => void;
+    onReceiveGift: (gift: any) => void;
+    configLiveStream: {
+        appId: string;
+        channelName: string;
+    };
+    _userInfoSocketChat: {
+        user_name: string;
+        user_id: string | number | any;
+        chanel_id: string;
+    };
+    cardName?: string;
+    imageUrl?: string;
+}
+
+let timeout;
+const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps> = withHostStreaming(props => {
+    const {
+        configLiveStream: { appId, channelName },
+        _userInfoSocketChat,
+        onReceiveGift,
+        onSelectGame,
+        onPressAvatar,
+        cardName,
+        imageUrl,
+    } = props;
+    const [countDown, setCountDown] = useState(3);
+
+    const init = () => {
+        setTimeout(() => {
+            props.init(appId);
+        }, 100);
+    };
+
+    useEffect(() => {
+        init();
+    }, []);
+
+    useEffect(() => {
+        if (props.joinSucceed) {
+            timeout = setTimeout(() => {
+                if (countDown === 0) {
+                    clearTimeout(timeout);
+                    return;
+                }
+                setCountDown(c => c - 1);
+            }, 1000);
+        } else {
+            setCountDown(3);
+        }
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [props.joinSucceed, countDown]);
+
+    const onPressCamera = () => props.switchCamera();
+    const onPressHelp = () => alertOk({ msg: 'onPressHelp' });
+    const onPressShare = () => alertOk({ msg: 'onPressShare' });
+
+    const onLiveNow = () => {
+        props.startCall(channelName, 9999);
+    };
+
+    const onPressEndLive = () => {
+        alertYesNo({
+            msg: 'Are you sure to end live?',
+            onPressAccept: () => props.endCall(),
+        });
+    };
+
+    const { send, messages, concurrent } = useWebSockets({
+        enabled: true,
+        _userInfo: _userInfoSocketChat,
+        onReceiveGift,
+    });
+
+    const onSend = ({ text }) => {
+        if (!text) return;
+        send({ message: text });
+        refComposer.current?.reset();
+    };
+
+    return (
+        <View style={defaultStyle.container}>
+            <BroadCasterView {...props} />
+            {props.joinSucceed ? (
+                countDown === 0 ? (
+                    <>
+                        <LiveHeader
+                            onPressEndLive={onPressEndLive}
+                            onPressCamera={onPressCamera}
+                            concurrent={concurrent}
+                            joinSucceed={props.joinSucceed}
+                        />
+                        <GiftFlag />
+                        <SwipeList dataMessage={messages} onSend={onSend} />
+                    </>
+                ) : (
+                    <View style={styles.wrapCountDown}>
+                        <Text style={styles.countDown}>{countDown}</Text>
+                    </View>
+                )
+            ) : (
+                <>
+                    <HeaderHost
+                        onPressAvatar={onPressAvatar}
+                        onPressHelp={onPressHelp}
+                        onPressShare={onPressShare}
+                    />
+                    <View style={styles.body}>
+                        <CardDashboard
+                            onSelectGame={onSelectGame}
+                            nameGame={cardName}
+                            url={
+                                imageUrl ||
+                                'https://cdn.pixabay.com/photo/2021/11/10/18/09/casino-6784520_960_720.jpg'
+                            }
+                        />
+                        <ButtonHost name={'Live Now'} onPress={onLiveNow} />
+                    </View>
+                </>
+            )}
+        </View>
+    );
+});
+
+const styles = StyleSheet.create({
+    body: {
+        flex: 1,
+        justifyContent: 'space-between',
+        zIndex: 999,
+    },
+    countDown: {
+        ...defaultStyle.heading3,
+        color: colors.WHITE,
+        textAlign: 'center',
+    },
+    wrapCountDown: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.BLACK_30,
+        width: WIDTH_SCREEN,
+        height: HEIGHT_SCREEN,
+        position: 'absolute',
+    },
+});
+
+export {
+    withAudienceStreaming,
+    withHostStreaming,
+    SwipeList,
+    GiftFlag,
+    useWebSockets,
+    AudienceView,
+    refChatList,
+    refComposer,
+    GiftListModal,
+    RNAudienceStreaming,
+    RNBroadCasterStreaming,
+};

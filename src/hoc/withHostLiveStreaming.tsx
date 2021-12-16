@@ -1,6 +1,5 @@
 import { isAndroid, isIOS } from '../utils/deviceInfo';
 import React from 'react';
-import { PermissionsAndroid } from 'react-native';
 import RtcEngine, {
     ChannelProfile,
     ClientRole,
@@ -8,6 +7,7 @@ import RtcEngine, {
     ConnectionStateType,
 } from 'react-native-agora';
 import { ReactNativeStreamProps } from '../index';
+import { requestCameraAndAudioPermission } from '../utils/permissions';
 
 // Define a Props interface.
 interface Props {}
@@ -22,25 +22,6 @@ interface State {
     connectionState: ConnectionStateType;
 }
 
-const requestCameraAndAudioPermission = async () => {
-    try {
-        const granted = await PermissionsAndroid.requestMultiple([
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-        if (
-            granted['android.permission.RECORD_AUDIO'] === PermissionsAndroid.RESULTS.GRANTED &&
-            granted['android.permission.CAMERA'] === PermissionsAndroid.RESULTS.GRANTED
-        ) {
-            console.log('You can use the cameras & mic');
-        } else {
-            console.log('Permission denied');
-        }
-    } catch (err) {
-        console.warn(err);
-    }
-};
-
 export default (WrappedComponent: any) => {
     class HostLiveStreaming extends React.PureComponent<ReactNativeStreamProps> {
         _engine?: RtcEngine;
@@ -54,12 +35,26 @@ export default (WrappedComponent: any) => {
             connectionState: ConnectionStateType.Connecting,
         };
 
+        onClose = async () => {
+            await this._endCall();
+        };
+
+        backAction = () => {
+            this.onClose();
+            return true;
+        };
+
         componentDidMount() {
             if (isAndroid) {
                 requestCameraAndAudioPermission().then(() => {
                     console.log('requested!');
                 });
             }
+            this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backAction);
+        }
+
+        componentWillUnmount() {
+            this.backHandler.remove();
         }
 
         _startCall = async (channelName: string, uid: number) => {
