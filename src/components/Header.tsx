@@ -9,9 +9,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ConnectionStateType } from 'react-native-agora';
 
 const Header = ({ onPress, concurrent = 0, connection, peerIds }) => {
-    const { bottom } = useSafeAreaInsets();
+    const { top } = useSafeAreaInsets();
     return (
-        <View style={[styles.contain, { top: bottom + heightPixel(16) }]}>
+        <View style={[styles.contain, { top: top + heightPixel(16) }]}>
             {connection === ConnectionStateType.Connected && Boolean(peerIds.length) && (
                 <View style={styles.wrapConcurrent}>
                     <Text style={[defaultStyle.subButton, { color: colors.WHITE }]}>
