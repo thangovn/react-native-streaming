@@ -14,22 +14,17 @@ const BroadCasterView = ({ renderWaitingView, joinSucceed, channelName }) => {
     ) : Boolean(renderWaitingView) ? (
         renderWaitingView()
     ) : (
-        <View style={styles.flex} />
+        <View style={styles.video} />
     );
 };
 
 export default React.memo(BroadCasterView);
 
 const styles = StyleSheet.create({
-    flex: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.light.MIRAGE,
-    },
     video: {
         position: 'absolute',
         width: WIDTH_SCREEN,
         height: HEIGHT_SCREEN,
+        backgroundColor: colors.light.MIRAGE,
     },
 });

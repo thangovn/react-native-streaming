@@ -9,6 +9,7 @@ import RtcEngine, {
 import { requestCameraAndAudioPermission } from '../utils/permissions';
 import { LiveStreamState } from './dtos';
 import { RNBroadCasterStreamingProps } from '../index';
+import { BackHandler } from 'react-native';
 
 // Define a Props interface.
 interface Props {}

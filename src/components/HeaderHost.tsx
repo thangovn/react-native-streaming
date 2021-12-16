@@ -2,7 +2,7 @@ import { IconButton } from './IconButton';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import { spacing } from '../constants/spacing';
-import { pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '@utils/scaling';
+import { pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '../utils/scaling';
 import React, { FC } from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { Edge, SafeAreaView } from 'react-native-safe-area-context';

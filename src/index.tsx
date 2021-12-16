@@ -110,7 +110,7 @@ const RNAudienceStreaming = withAudienceStreaming(
 );
 
 export interface RNBroadCasterStreamingProps {
-    onBack?: () => void;
+    onBack: () => void;
     onCloseStream: () => void;
     onSelectGame: () => void;
     onPressAvatar: () => void;

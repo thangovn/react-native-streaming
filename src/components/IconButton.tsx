@@ -5,9 +5,10 @@ import { ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { widthPixel } from '../utils/scaling';
+import { colors } from '../constants/colors';
 
 interface Props {
-    icon: number;
+    icon?: number;
     onPress?: () => void;
     style?: ViewStyle;
     iconStyle?: any;
@@ -26,9 +27,9 @@ export const IconButton: FC<Props> = ({
         <Pressable onPress={onPress} style={style}>
             {Boolean(iconVector) ? (
                 <Icon
-                    name={icon}
+                    name={iconVector}
                     size={widthPixel(28)}
-                    color={tintColor}
+                    color={colors.WHITE}
                     onPress={onPress}
                     style={{ marginLeft: widthPixel(8) }}
                 />
