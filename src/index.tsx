@@ -13,7 +13,7 @@ import { refChatList } from './components/ChatList';
 import { defaultStyle } from './constants/defaultStyle';
 import BroadCasterView from './components/BroadCasterView';
 import ButtonHost from './components/ButtonHost';
-import { HeaderHost } from './components/HeaderHost';
+import HeaderHost from './components/HeaderHost';
 import CardDashboard from './components/CardDashboard';
 import { LiveHeader } from './components/LiveHeader';
 import { colors } from './constants/colors';
@@ -110,6 +110,7 @@ const RNAudienceStreaming = withAudienceStreaming(
 );
 
 export interface RNBroadCasterStreamingProps {
+    onBack?: () => void;
     onCloseStream: () => void;
     onSelectGame: () => void;
     onPressAvatar: () => void;
@@ -144,6 +145,7 @@ const RNBroadCasterStreaming = withHostStreaming(
             renderWaitingView,
             rightIconComposer,
             uid,
+            onBack,
         } = props;
 
         const [countDown, setCountDown] = useState(3);
@@ -234,9 +236,17 @@ const RNBroadCasterStreaming = withHostStreaming(
                 ) : (
                     <>
                         <HeaderHost
-                            onPressAvatar={onPressAvatar}
-                            onPressHelp={onPressHelp}
-                            onPressShare={onPressShare}
+                            onBack={onBack}
+                            rightComponent={[
+                                {
+                                    icon: 'share-social-outline',
+                                    onPress: onPressShare,
+                                },
+                                {
+                                    icon: 'help-circle-outline',
+                                    onPress: onPressHelp,
+                                },
+                            ]}
                         />
                         <View style={styles.body}>
                             <CardDashboard

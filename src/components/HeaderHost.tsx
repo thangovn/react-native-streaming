@@ -1,46 +1,124 @@
+import { IconButton } from './IconButton';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
-import { pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '../utils/scaling';
-import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { spacing } from '../constants/spacing';
+import { pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '@utils/scaling';
+import React, { FC } from 'react';
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { Edge, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export const HeaderHost = ({ onPressAvatar, onPressShare, onPressHelp }) => {
+interface Props {
+    centerName?: string;
+    leftComponent?: () => JSX.Element;
+    rightComponent?: { icon: string; onPress: () => void; tintColor?: string }[] | Function;
+    onPressSearch?: () => void;
+    edges?: Edge;
+    centerTextStyle?: TextStyle;
+    itemStyle?: ViewStyle;
+    containerStyle?: ViewStyle;
+    centerStyle?: ViewStyle;
+    leftViewStyle?: ViewStyle;
+    tintColorLeftIcon?: string;
+    onBack?: () => void;
+}
+const HeaderHost: FC<Props> = ({
+    centerName,
+    leftComponent,
+    rightComponent,
+    onPressSearch,
+    edges = 'top',
+    centerTextStyle,
+    itemStyle,
+    containerStyle,
+    centerStyle,
+    leftViewStyle,
+    tintColorLeftIcon,
+    onBack,
+}) => {
     return (
-        <SafeAreaView style={styles.container}>
-            <Pressable onPress={onPressAvatar}>
-                <FastImage
-                    source={{
-                        uri: 'https://cdn.pixabay.com/photo/2021/12/01/18/17/cat-6838844_960_720.jpg',
-                    }}
-                    style={defaultStyle.icon_36}
-                />
-            </Pressable>
-            <View style={defaultStyle.flexRow}>
-                <Icon
-                    name={'share-social-outline'}
-                    size={widthPixel(28)}
-                    color={colors.WHITE}
-                    onPress={onPressShare}
-                />
-                <View style={{ width: widthPixel(16) }} />
-                <Icon
-                    name={'help-circle-outline'}
-                    size={widthPixel(28)}
-                    color={colors.WHITE}
-                    onPress={onPressHelp}
-                />
+        <SafeAreaView edges={[edges]} style={[styles.contain, containerStyle]}>
+            <View style={[styles.leftView, leftViewStyle]}>
+                {Boolean(leftComponent) ? (
+                    leftComponent()
+                ) : (
+                    <IconButton
+                        iconVector={'chevron-back-outline'}
+                        onPress={onBack}
+                        tintColor={tintColorLeftIcon}
+                    />
+                )}
+            </View>
+            {centerName && (
+                <View style={[styles.center, centerStyle]}>
+                    <Text style={[styles.centerName, centerTextStyle]}>{centerName}</Text>
+                </View>
+            )}
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                {typeof rightComponent === 'function' ? (
+                    rightComponent()
+                ) : Array.isArray(rightComponent) ? (
+                    <View style={defaultStyle.flexRow}>
+                        {rightComponent.map((item, i) => (
+                            <Item
+                                key={i}
+                                onPress={item.onPress}
+                                icon={item.icon}
+                                tintColor={item.tintColor}
+                                containerStyle={[styles.containerStyle, itemStyle]}
+                            />
+                        ))}
+                    </View>
+                ) : (
+                    <Item onPress={onPressSearch} icon={'search-outline'} />
+                )}
             </View>
         </SafeAreaView>
     );
 };
 
+export default React.memo(HeaderHost);
+
 const styles = StyleSheet.create({
-    container: {
-        ...defaultStyle.spaceBetween,
-        marginHorizontal: pixelSizeHorizontal(16),
-        marginVertical: pixelSizeVertical(10),
+    leftView: {
+        flex: 1,
+        alignItems: 'flex-start',
+    },
+    centerName: {
+        ...defaultStyle.heading2,
+        textAlign: 'center',
+    },
+    contain: {
+        ...defaultStyle.flexRow,
+        justifyContent: 'space-between',
+        paddingHorizontal: pixelSizeHorizontal(spacing.sixteen),
+        paddingVertical: pixelSizeVertical(spacing.ten),
+    },
+    center: {
+        flex: 1,
+        marginHorizontal: pixelSizeHorizontal(8),
+        alignItems: 'center',
+    },
+    containerStyle: {
+        marginLeft: widthPixel(spacing.twenty),
     },
 });
+
+interface IItem {
+    onPress: () => void;
+    icon: string;
+    tintColor?: string;
+    containerStyle?: ViewStyle | any;
+}
+
+export const Item: FC<IItem> = ({ onPress, icon, tintColor = colors.WHITE, containerStyle }) => {
+    return (
+        <Icon
+            name={icon}
+            size={widthPixel(28)}
+            color={tintColor}
+            onPress={onPress}
+            style={{ marginLeft: widthPixel(8) }}
+        />
+    );
+};

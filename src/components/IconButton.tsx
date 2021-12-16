@@ -3,6 +3,8 @@ import { defaultStyle } from '../constants/defaultStyle';
 import React, { FC } from 'react';
 import { ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { widthPixel } from '../utils/scaling';
 
 interface Props {
     icon: number;
@@ -10,15 +12,33 @@ interface Props {
     style?: ViewStyle;
     iconStyle?: any;
     tintColor?: string;
+    iconVector?: string;
 }
-export const IconButton: FC<Props> = ({ icon, onPress, style, iconStyle, tintColor }) => {
+export const IconButton: FC<Props> = ({
+    icon,
+    onPress,
+    style,
+    iconStyle,
+    tintColor,
+    iconVector,
+}) => {
     return (
         <Pressable onPress={onPress} style={style}>
-            <FastImage
-                source={icon}
-                style={[defaultStyle.icon_24, iconStyle]}
-                tintColor={tintColor}
-            />
+            {Boolean(iconVector) ? (
+                <Icon
+                    name={icon}
+                    size={widthPixel(28)}
+                    color={tintColor}
+                    onPress={onPress}
+                    style={{ marginLeft: widthPixel(8) }}
+                />
+            ) : (
+                <FastImage
+                    source={icon}
+                    style={[defaultStyle.icon_24, iconStyle]}
+                    tintColor={tintColor}
+                />
+            )}
         </Pressable>
     );
 };
