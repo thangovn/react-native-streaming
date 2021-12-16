@@ -11,7 +11,13 @@ import Header from './Header';
 const AudienceView = ({ onClose, connection, concurrent, peerIds, channelName }) => {
     return (
         <>
-            <Header onPress={onClose} concurrent={concurrent} />
+            <Header
+                onPress={onClose}
+                concurrent={concurrent}
+                connection={connection}
+                peerIds={peerIds}
+            />
+
             {connection === ConnectionStateType.Connecting ? (
                 <IndicatorLoading backgroundColor={colors.light.MIRAGE} />
             ) : connection === ConnectionStateType.Connected && Boolean(peerIds.length) ? (

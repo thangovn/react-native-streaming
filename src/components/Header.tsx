@@ -6,14 +6,19 @@ import { fontPixel, heightPixel, pixelSizeHorizontal, widthPixel } from '../util
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ConnectionStateType } from 'react-native-agora';
 
-const Header = ({ onPress, concurrent = 0 }) => {
+const Header = ({ onPress, concurrent = 0, connection, peerIds }) => {
     const { bottom } = useSafeAreaInsets();
     return (
         <View style={[styles.contain, { top: bottom + heightPixel(16) }]}>
-            <View style={styles.wrapConcurrent}>
-                <Text style={[defaultStyle.subButton, { color: colors.WHITE }]}>{concurrent}</Text>
-            </View>
+            {connection === ConnectionStateType.Connected && Boolean(peerIds.length) && (
+                <View style={styles.wrapConcurrent}>
+                    <Text style={[defaultStyle.subButton, { color: colors.WHITE }]}>
+                        {concurrent}
+                    </Text>
+                </View>
+            )}
             <IconButton icon={ic_close} onPress={onPress} tintColor={colors.light.White} />
         </View>
     );
