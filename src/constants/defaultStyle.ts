@@ -1,4 +1,4 @@
-import { fontPixel, widthPixel, heightPixel, pixelSizeHorizontal } from '@utils/scaling';
+import { fontPixel, widthPixel, heightPixel, pixelSizeHorizontal } from '../utils/scaling';
 import { StyleSheet } from 'react-native';
 import { colors } from './colors';
 import { HEIGHT_SCREEN, spacing, WIDTH_SCREEN } from './spacing';
@@ -124,6 +124,11 @@ export const defaultStyle = StyleSheet.create({
     heading3: {
         fontSize: fontPixel(spacing.sixteen),
         lineHeight: heightPixel(spacing.twentyFour),
+        fontFamily: fonts.Bold,
+        color: colors.light.Black,
+    },
+    heading4: {
+        fontSize: fontPixel(80),
         fontFamily: fonts.Bold,
         color: colors.light.Black,
     },

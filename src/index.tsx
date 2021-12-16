@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         zIndex: 999,
     },
     countDown: {
-        ...defaultStyle.heading3,
+        ...defaultStyle.heading4,
         color: colors.WHITE,
         textAlign: 'center',
     },
