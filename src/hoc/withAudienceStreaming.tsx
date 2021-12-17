@@ -18,7 +18,7 @@ interface Props {}
 
 const withAudienceStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
     class ViewerStreaming extends React.PureComponent<P & RNAudienceStreamingProps> {
-        _engine?: RtcEngine;
+        _engine?: RtcEngine | any;
 
         state: LiveStreamState = {
             token: null,
@@ -27,6 +27,7 @@ const withAudienceStreaming = <P extends object>(WrappedComponent: React.Compone
             isHost: true,
             switchCamera: true,
             connectionState: ConnectionStateType.Connecting,
+            errInit: null,
         };
 
         onClose = async () => {
@@ -73,7 +74,9 @@ const withAudienceStreaming = <P extends object>(WrappedComponent: React.Compone
 
         // Pass in your App ID through this.state, create and initialize an RtcEngine object.
         init = async (appId: string) => {
-            this._engine = await RtcEngine.create(appId);
+            this._engine = await RtcEngine.create(appId).catch(err =>
+                this.setState({ errInit: 'Invalid Key' }),
+            );
 
             await this._engine.enableVideo();
 

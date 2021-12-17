@@ -4,9 +4,9 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../constants/colors';
 
-const ButtonHost = ({ name, onPress }) => {
+const ButtonHost = ({ name, onPress, disabled = false }) => {
     return (
-        <Pressable onPress={onPress} style={styles.btn}>
+        <Pressable onPress={onPress} style={styles.btn} disabled={disabled}>
             <Text style={[defaultStyle.body, { color: colors.WHITE }]}>{name}</Text>
         </Pressable>
     );

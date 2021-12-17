@@ -1,4 +1,4 @@
-import { isAndroid, isIOS } from '../utils/deviceInfo';
+import { isAndroid } from '../utils/deviceInfo';
 import React from 'react';
 import RtcEngine, {
     ChannelProfile,
@@ -26,7 +26,7 @@ interface State {
 
 const withHostLiveStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
     class HostLiveStreaming extends React.PureComponent<P & RNBroadCasterStreamingProps> {
-        _engine?: RtcEngine;
+        _engine?: RtcEngine | any;
 
         state: LiveStreamState = {
             token: null,
@@ -35,6 +35,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
             isHost: true,
             switchCamera: true,
             connectionState: ConnectionStateType.Connecting,
+            errInit: null,
         };
 
         onClose = async () => {
@@ -82,7 +83,9 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
 
         // Pass in your App ID through this.state, create and initialize an RtcEngine object.
         init = async (appId: string) => {
-            this._engine = await RtcEngine.create(appId);
+            this._engine = await RtcEngine.create(appId).catch(err =>
+                this.setState({ errInit: 'Invalid Key' }),
+            );
 
             // Enable the video module.
             await this._engine.enableVideo();

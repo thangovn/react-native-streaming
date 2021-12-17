@@ -14,4 +14,5 @@ export interface LiveStreamState {
     isHost?: Boolean;
     switchCamera?: Boolean;
     connectionState?: ConnectionStateType;
+    errInit?: string | null;
 }

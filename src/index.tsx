@@ -20,7 +20,7 @@ import { colors } from './constants/colors';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
 import { alertOk, alertYesNo } from './utils/alert';
 import { hocDtos, LiveStreamState } from './hoc/dtos';
-
+import { fetchSignInKey } from './utils/signInKey';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
@@ -47,15 +47,19 @@ const RNAudienceStreaming = withAudienceStreaming(
             _userInfoSocketChat,
         } = props;
 
-        const initial = async () => {
-            await props.init(appId);
+        const initial = async (app_id: string) => {
+            await props.init(app_id);
             setTimeout(() => {
                 props.startCall(channelName);
             }, 2000);
         };
 
         useEffect(() => {
-            initial();
+            fetchSignInKey(appId)
+                .then(key => {
+                    initial(key);
+                })
+                .catch();
         }, []);
 
         const onClose = async () => {
@@ -85,13 +89,19 @@ const RNAudienceStreaming = withAudienceStreaming(
 
         return (
             <View style={defaultStyle.container}>
-                <AudienceView
-                    onClose={onClose}
-                    connection={props.connectionState}
-                    concurrent={concurrent}
-                    peerIds={props.peerIds}
-                    channelName={channelName}
-                />
+                {Boolean(props.errInit) ? (
+                    <View style={styles.video}>
+                        <Text style={styles.failText}>{props.errInit}</Text>
+                    </View>
+                ) : (
+                    <AudienceView
+                        onClose={onClose}
+                        connection={props.connectionState}
+                        concurrent={concurrent}
+                        peerIds={props.peerIds}
+                        channelName={channelName}
+                    />
+                )}
                 {props.connectionState === ConnectionStateType.Connected &&
                     Boolean(props.peerIds.length) && (
                         <>
@@ -152,14 +162,18 @@ const RNBroadCasterStreaming = withHostStreaming(
 
         const [countDown, setCountDown] = useState(3);
 
-        const initial = () => {
+        const initial = (app_id: string) => {
             setTimeout(() => {
-                props.init(appId);
+                props.init(app_id);
             }, 100);
         };
 
         useEffect(() => {
-            initial();
+            fetchSignInKey(appId)
+                .then(key => {
+                    initial(key);
+                })
+                .catch();
         }, []);
 
         useEffect(() => {
@@ -209,11 +223,18 @@ const RNBroadCasterStreaming = withHostStreaming(
 
         return (
             <View style={defaultStyle.container}>
-                <BroadCasterView
-                    joinSucceed={props.joinSucceed}
-                    renderWaitingView={renderWaitingView}
-                    channelName={channelName}
-                />
+                {Boolean(props.errInit) ? (
+                    <View style={styles.video}>
+                        <Text style={styles.failText}>{props.errInit}</Text>
+                    </View>
+                ) : (
+                    <BroadCasterView
+                        joinSucceed={props.joinSucceed}
+                        renderWaitingView={renderWaitingView}
+                        channelName={channelName}
+                    />
+                )}
+
                 {props.joinSucceed ? (
                     countDown === 0 ? (
                         <>
@@ -260,7 +281,11 @@ const RNBroadCasterStreaming = withHostStreaming(
                                     'https://cdn.pixabay.com/photo/2021/11/10/18/09/casino-6784520_960_720.jpg'
                                 }
                             />
-                            <ButtonHost name={'Live Now'} onPress={onLiveNow} />
+                            <ButtonHost
+                                name={'Live Now'}
+                                onPress={onLiveNow}
+                                disabled={Boolean(props.errInit)}
+                            />
                         </View>
                     </>
                 )}
@@ -287,6 +312,18 @@ const styles = StyleSheet.create({
         width: WIDTH_SCREEN,
         height: HEIGHT_SCREEN,
         position: 'absolute',
+    },
+    failText: {
+        ...defaultStyle.button2,
+        color: colors.light.White,
+    },
+    video: {
+        position: 'absolute',
+        width: WIDTH_SCREEN,
+        height: HEIGHT_SCREEN,
+        backgroundColor: colors.light.MIRAGE,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
