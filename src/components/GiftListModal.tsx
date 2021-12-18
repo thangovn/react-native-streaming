@@ -1,13 +1,3 @@
-// import {
-//     lottie_cake,
-//     lottie_diamond,
-//     lottie_gold_bar,
-//     lottie_happy_cat,
-//     lottie_heart,
-//     lottie_lipsticks,
-//     lottie_panda,
-//     lottie_rose,
-// } from '@assets/lottie';
 import Pressable from '../components/Pressable';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
@@ -27,65 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { refChatList } from './ChatList';
 import ConfirmModal, { refConfirmModal } from './ConfirmModal';
 import GiftItem from './GiftItem';
-
-// const DATA = [
-//     {
-//         id: 1,
-//         name: 'Rose',
-//         icon: lottie_rose,
-//         currency: `$5`,
-//         number: 1,
-//     },
-//     {
-//         id: 2,
-//         name: 'Heart',
-//         icon: lottie_heart,
-//         currency: `$75`,
-//     },
-//     {
-//         id: 3,
-//         name: 'Golden Cat',
-//         icon: lottie_happy_cat,
-//         currency: `$150`,
-//     },
-//     {
-//         id: 4,
-//         name: 'Cake',
-//         icon: lottie_cake,
-//         currency: `$175`,
-//     },
-//     {
-//         id: 5,
-//         name: 'Gold Bar',
-//         icon: lottie_gold_bar,
-//         currency: `$300`,
-//     },
-//     {
-//         id: 6,
-//         name: 'Panda',
-//         icon: lottie_panda,
-//         currency: `$100`,
-//     },
-//     {
-//         id: 7,
-//         name: 'Diamond',
-//         icon: lottie_diamond,
-//         currency: `$500`,
-//     },
-//     {
-//         id: 8,
-//         name: 'Lipsticks',
-//         icon: lottie_lipsticks,
-//         currency: `$30`,
-//     },
-// ];
-
-export interface IGiftItem {
-    id: number;
-    name: string;
-    icon: any;
-    currency: number | string;
-}
+import { IGiftItem } from '../dtos';
 
 export interface IGiftListModal {
     data: IGiftItem[];
@@ -116,7 +48,7 @@ const GiftListModal: FC<IGiftListModal> = ({ data = [], onDonate }) => {
         );
     };
 
-    const onPressGiftItem = (item: any) => {
+    const onPressGiftItem = (item: IGiftItem) => {
         setCurrentGift(item);
         a.value = withTiming(0, { duration: 500 });
     };

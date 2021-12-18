@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { refComposer } from './components/Composer';
-import GiftListModal, { IGiftItem } from './components/GiftListModal';
+import GiftListModal from './components/GiftListModal';
 import { ConnectionStateType } from 'react-native-agora';
 import { useWebSockets } from './hooks/useWebSockets';
 import GiftFlag, { refGiftFlag } from './components/GiftFlag';
@@ -21,6 +21,8 @@ import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
 import { alertOk, alertYesNo } from './utils/alert';
 import { hocDtos, LiveStreamState } from './hoc/dtos';
 import { fetchSignInKey } from './utils/signInKey';
+import Header from './components/Header';
+import { IGiftItem } from './dtos';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
@@ -60,7 +62,7 @@ const RNAudienceStreaming = withAudienceStreaming(
                     initial(key);
                 })
                 .catch();
-        }, []);
+        }, [appId]);
 
         const onClose = async () => {
             await props.endCall();
@@ -75,7 +77,7 @@ const RNAudienceStreaming = withAudienceStreaming(
             refComposer.current?.reset();
         };
 
-        const handleDonate = (gift: any) => {
+        const handleDonate = (gift: IGiftItem) => {
             send_gift(gift);
         };
 
@@ -91,6 +93,12 @@ const RNAudienceStreaming = withAudienceStreaming(
             <View style={defaultStyle.container}>
                 {Boolean(props.errInit) ? (
                     <View style={styles.video}>
+                        <Header
+                            onPress={onClose}
+                            concurrent={concurrent}
+                            connection={props.connectionState}
+                            peerIds={props.peerIds}
+                        />
                         <Text style={styles.failText}>{props.errInit}</Text>
                     </View>
                 ) : (
@@ -105,7 +113,6 @@ const RNAudienceStreaming = withAudienceStreaming(
                 {props.connectionState === ConnectionStateType.Connected &&
                     Boolean(props.peerIds.length) && (
                         <>
-                            <GiftFlag />
                             <SwipeList
                                 dataMessage={messages}
                                 onSend={onSend}
@@ -174,7 +181,7 @@ const RNBroadCasterStreaming = withHostStreaming(
                     initial(key);
                 })
                 .catch();
-        }, []);
+        }, [appId]);
 
         useEffect(() => {
             if (props.joinSucceed) {
@@ -244,7 +251,6 @@ const RNBroadCasterStreaming = withHostStreaming(
                                 concurrent={concurrent}
                                 joinSucceed={props.joinSucceed}
                             />
-                            <GiftFlag />
                             <SwipeList
                                 dataMessage={messages}
                                 onSend={onSend}

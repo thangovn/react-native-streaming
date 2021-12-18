@@ -1,4 +1,4 @@
 export enum GiftType {
-    LOTTIE = 'LOTTIE',
-    GIF = 'GIF',
+    LOTTIE = 'Lottie',
+    GIF = 'Gif',
 }

@@ -25,6 +25,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import RNAndroidKeyboardAdjust from 'rn-android-keyboard-adjust';
 import Composer from './Composer';
+import GiftFlag from './GiftFlag';
+import { IReceiveGiftItem } from '../dtos';
 
 interface Props {
     data: any[];
@@ -33,7 +35,8 @@ interface Props {
 }
 
 let timeout;
-export const refChatList = React.createRef<{ startAnimation: (iconGift: any) => void }>();
+export const refChatList =
+    React.createRef<{ startAnimation: (receiveGift: IReceiveGiftItem) => void }>();
 const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
     const renderMessageItem = ({ item, index }) => {
         return (
@@ -48,10 +51,10 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
     const refLottie = useRef<any>();
     const refConfetti = useRef<any>();
 
-    const [currentIcon, setCurrentIcon] = useState<any>();
+    const [currentIcon, setCurrentIcon] = useState<IReceiveGiftItem>();
 
     useImperativeHandle(refChatList, () => ({
-        startAnimation: (icon: any) => {
+        startAnimation: (icon: IReceiveGiftItem) => {
             refLottie.current?.reset();
             refConfetti.current?.reset();
             cancelAnimation(scale);
@@ -66,7 +69,7 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                 refLottie.current?.play();
                 refConfetti.current?.play();
 
-                opacity.value = withTiming(0, { duration: 4000 }, () => {
+                opacity.value = withTiming(0, { duration: 8000 }, () => {
                     scale.value = 0;
                     opacity.value = 1;
                     bottom.value = 0;
@@ -76,8 +79,8 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                     opacityConfetti.value = 1;
                 });
                 scale.value = withTiming(3, { duration: 1500 });
-                bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(25), { duration: 500 });
-                right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(25), { duration: 500 });
+                bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(50), { duration: 500 });
+                right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(50), { duration: 500 });
             }, 600);
         },
     }));
@@ -126,6 +129,7 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                 },
             ]}>
             <View style={styles.inner}>
+                <GiftFlag />
                 <FlatList
                     data={data}
                     keyExtractor={(item, index) => `${index}`}

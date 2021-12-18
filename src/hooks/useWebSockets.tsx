@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
+import { IGiftItem } from '../dtos';
 import { ChanelConcurrent } from './webSocketDTO';
 
 type Props = {
@@ -33,7 +34,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         });
     };
 
-    const send_gift = (giftData: any) => {
+    const send_gift = (giftData: IGiftItem) => {
         ref.current.emit('send_gift', {
             chanel_id: userInfo.chanel_id,
             quantity: 99,
