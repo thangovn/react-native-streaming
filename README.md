@@ -14,3 +14,53 @@ Install the library using yarn:
 # using yarn
 $ yarn add https://github.com/thuanneotime/react-native-streaming.git
 ```
+
+
+#### RN >= 0.60
+
+If you are using RN >= 0.60, only run `npx pod-install`. Then rebuild your project.
+
+## General Usage
+
+For Host 
+
+```js
+import { RNBroadCasterStreaming } from 'react-native-streaming';
+```
+
+### Basic usage with state
+
+```js
+import React from 'react';
+import { RNBroadCasterStreaming } from 'react-native-streaming';
+
+const appId = YOUR_APP_ID;
+const channelName = YOUR_CHANNEL_NAME_ID
+
+export const App = () => {
+  ...
+  
+    const onReceiveGift = gift => {};
+    const onSelectGame = () => Navigation.navigate('SCREEN', { item: state });
+    const onPressAvatar = () => Navigation.navigate('SCREEN');
+
+   return (
+      <RNBroadCasterStreaming
+          onCloseStream={() => Navigation.back()}
+          configLiveStream={{ appId: appId, channelName: channelName }}
+          _userInfoSocketChat={{
+              user_name: login_informations.full_name,
+              user_id: login_informations.id,
+              chanel_id: channelName,
+          }}
+          onReceiveGift={onReceiveGift}
+          uid={login_informations.id}
+          onPressAvatar={onPressAvatar}
+          onSelectGame={onSelectGame}
+          onBack={() => Navigation.back()}
+          cardName={item.game}
+          channelLive={item.chanel}
+      />
+  );
+};
+```
