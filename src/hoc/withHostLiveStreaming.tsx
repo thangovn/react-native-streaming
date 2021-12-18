@@ -43,7 +43,6 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
         };
 
         backAction = () => {
-            this.onClose();
             return true;
         };
 

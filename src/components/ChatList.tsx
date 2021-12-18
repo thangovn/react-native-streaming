@@ -32,16 +32,22 @@ interface Props {
     data: any[];
     onSend?: ({ text }: { text: string }) => void;
     rightIconComposer?: any;
+    currentUserId: any;
 }
 
 let timeout;
 export const refChatList =
     React.createRef<{ startAnimation: (receiveGift: IReceiveGiftItem) => void }>();
-const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
+const ChatList: FC<Props> = ({ data, onSend, rightIconComposer, currentUserId }) => {
     const renderMessageItem = ({ item, index }) => {
+        const sameUser = parseInt(get(item, 'user_id', 0)) === parseInt(currentUserId);
         return (
             <View style={styles.messageItem}>
-                <Text style={[defaultStyle.subButton, { color: colors.light.MainColor }]}>
+                <Text
+                    style={[
+                        defaultStyle.subButton,
+                        { color: sameUser ? colors.light.JAFFA : colors.light.MainColor },
+                    ]}>
                     {`${item.user_name}: `}
                 </Text>
                 <Text style={styles.messageText}>{item.message}</Text>

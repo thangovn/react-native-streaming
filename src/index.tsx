@@ -114,6 +114,7 @@ const RNAudienceStreaming = withAudienceStreaming(
                     Boolean(props.peerIds.length) && (
                         <>
                             <SwipeList
+                                currentUserId={_userInfoSocketChat.user_id}
                                 dataMessage={messages}
                                 onSend={onSend}
                                 rightIconComposer={rightIconComposer}
@@ -252,6 +253,7 @@ const RNBroadCasterStreaming = withHostStreaming(
                                 joinSucceed={props.joinSucceed}
                             />
                             <SwipeList
+                                currentUserId={_userInfoSocketChat.user_id}
                                 dataMessage={messages}
                                 onSend={onSend}
                                 rightIconComposer={rightIconComposer}

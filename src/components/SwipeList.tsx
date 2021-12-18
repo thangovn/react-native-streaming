@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import ChatList from './ChatList';
 
-const SwipeList = ({ dataMessage, onSend, rightIconComposer }) => {
+const SwipeList = ({ dataMessage, onSend, rightIconComposer, currentUserId }) => {
     const refFlatList = useRef<any>();
     const { isShowKeyboard } = useKeyboard();
 
@@ -19,6 +19,7 @@ const SwipeList = ({ dataMessage, onSend, rightIconComposer }) => {
             <View style={styles.item}>
                 {item.key === 'first' ? null : (
                     <ChatList
+                        currentUserId={currentUserId}
                         data={dataMessage}
                         onSend={onSend}
                         rightIconComposer={rightIconComposer}
