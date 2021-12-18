@@ -12,7 +12,7 @@ import {
     pixelSizeVertical,
     widthPixel,
 } from '../utils/scaling';
-import { isEmpty } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import AnimatedLottieView from 'lottie-react-native';
 import React, { FC, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
@@ -26,7 +26,7 @@ import Animated, {
 import RNAndroidKeyboardAdjust from 'rn-android-keyboard-adjust';
 import Composer from './Composer';
 import GiftFlag from './GiftFlag';
-import { IReceiveGiftItem } from '../dtos';
+import { IGiftItem, IReceiveGiftItem } from '../dtos';
 
 interface Props {
     data: any[];
@@ -75,10 +75,10 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                     bottom.value = 0;
                     right.value = 0;
                 });
-                opacityConfetti.value = withTiming(0, { duration: 8000 }, () => {
+                opacityConfetti.value = withTiming(0, { duration: 10000 }, () => {
                     opacityConfetti.value = 1;
                 });
-                scale.value = withTiming(3, { duration: 1500 });
+                scale.value = withTiming(3, { duration: 1000 });
                 bottom.value = withTiming(HEIGHT_SCREEN / 1.5 - heightPixel(50), { duration: 500 });
                 right.value = withTiming(WIDTH_SCREEN / 2 - widthPixel(50), { duration: 500 });
             }, 600);
@@ -128,6 +128,35 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                     }),
                 },
             ]}>
+            <Animated.View style={[styles.box, animationStyle]}>
+                {!isEmpty(currentIcon) ? (
+                    <>
+                        {currentIcon.gift_data.gift_type === GiftType.GIF ? (
+                            <FastImage
+                                source={{ uri: get(currentIcon, 'gift_data.resource') }}
+                                style={StyleSheet.absoluteFill}
+                                resizeMode={'contain'}
+                            />
+                        ) : (
+                            <AnimatedLottieView
+                                ref={refLottie}
+                                source={get(currentIcon, 'gift_data.resource')}
+                                style={StyleSheet.absoluteFill}
+                                resizeMode={'contain'}
+                            />
+                        )}
+                    </>
+                ) : null}
+            </Animated.View>
+            <Animated.View style={[styles.wrapConfetti, animationConfettiStyle]}>
+                <AnimatedLottieView
+                    loop={false}
+                    resizeMode={'cover'}
+                    ref={refConfetti}
+                    source={lottie_confetti}
+                    style={styles.lottieConfetti}
+                />
+            </Animated.View>
             <View style={styles.inner}>
                 <GiftFlag />
                 <FlatList
@@ -138,37 +167,7 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                     style={styles.containFlatList}
                     showsVerticalScrollIndicator={false}
                 />
-                <Animated.View style={[styles.box, animationStyle]}>
-                    {!isEmpty(currentIcon) ? (
-                        <>
-                            {(currentIcon.type || currentIcon.gift_data.type) === GiftType.GIF ? (
-                                <FastImage
-                                    source={{
-                                        uri: currentIcon.url
-                                            ? currentIcon.url
-                                            : currentIcon.gift_data.url,
-                                    }}
-                                    style={StyleSheet.absoluteFill}
-                                />
-                            ) : (
-                                <AnimatedLottieView
-                                    ref={refLottie}
-                                    source={currentIcon.resource || currentIcon.gift_data.resource}
-                                    style={StyleSheet.absoluteFill}
-                                />
-                            )}
-                        </>
-                    ) : null}
-                </Animated.View>
-                <Animated.View style={[styles.wrapConfetti, animationConfettiStyle]}>
-                    <AnimatedLottieView
-                        loop={false}
-                        resizeMode={'cover'}
-                        ref={refConfetti}
-                        source={lottie_confetti}
-                        style={styles.lottieConfetti}
-                    />
-                </Animated.View>
+
                 <Composer onSend={onSend} source={rightIconComposer} />
             </View>
         </KeyboardAvoidingView>
@@ -213,8 +212,8 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     box: {
-        width: widthPixel(50),
-        height: widthPixel(50),
+        width: widthPixel(100),
+        height: widthPixel(100),
         position: 'absolute',
     },
     lottieConfetti: {

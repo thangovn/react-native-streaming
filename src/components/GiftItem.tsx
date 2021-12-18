@@ -12,8 +12,9 @@ import AnimatedLottieView from 'lottie-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { InteractionManager, Pressable, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import FastImage from 'react-native-fast-image';
 
-const GiftItem = ({ icon, name, currency, onPress, hasPicked, number }) => {
+const GiftItem = ({ icon, name, currency, onPress, hasPicked, giftQuantity, isGIF }) => {
     const ref = useRef<any>();
     const [quantity, setQuantity] = useState(1);
 
@@ -48,13 +49,22 @@ const GiftItem = ({ icon, name, currency, onPress, hasPicked, number }) => {
     const borderColor = hasPicked ? colors.light.INDIGO : colors.light.TRANSPARENT;
     return (
         <Pressable style={[styles.item, { borderColor }]} onPress={onPress}>
-            <AnimatedLottieView
-                ref={ref}
-                source={icon}
-                autoSize
-                style={hasPicked ? styles.icPicked : styles.icon}
-            />
-            {!Boolean(number) && <GiftBadge count={number} />}
+            {isGIF ? (
+                <FastImage
+                    source={{ uri: icon }}
+                    style={hasPicked ? styles.icPicked : styles.icon}
+                    resizeMode={'contain'}
+                />
+            ) : (
+                <AnimatedLottieView
+                    ref={ref}
+                    source={icon}
+                    autoSize
+                    style={hasPicked ? styles.icPicked : styles.icon}
+                />
+            )}
+
+            {!Boolean(giftQuantity) && <GiftBadge count={giftQuantity} />}
             {hasPicked ? (
                 <View style={styles.wrapPicked}>
                     <Text style={defaultStyle.sub1}>{currency}</Text>
@@ -91,17 +101,17 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: fontPixel(10),
         position: 'relative',
-        width: WIDTH_SCREEN / 4 - 8,
-        height: WIDTH_SCREEN / 4 - 8,
+        width: WIDTH_SCREEN / 4 - widthPixel(8),
+        height: WIDTH_SCREEN / 4 - widthPixel(8),
         marginVertical: pixelSizeVertical(8),
     },
     icon: {
-        maxWidth: widthPixel(48),
-        maxHeight: heightPixel(48),
+        width: widthPixel(48),
+        height: heightPixel(48),
     },
     icPicked: {
-        maxWidth: widthPixel(60),
-        maxHeight: heightPixel(60),
+        width: widthPixel(60),
+        height: heightPixel(60),
         position: 'absolute',
         top: heightPixel(-4),
     },

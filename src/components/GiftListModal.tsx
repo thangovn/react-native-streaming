@@ -1,6 +1,14 @@
+import { debounce } from 'lodash';
+import React, { FC, useImperativeHandle, useState } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import ReactNativeModal from 'react-native-modal';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import Pressable from '../components/Pressable';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
+import { IGiftItem } from '../dtos';
+import { GiftType } from '../enums/giftType';
 import {
     fontPixel,
     heightPixel,
@@ -8,16 +16,8 @@ import {
     pixelSizeVertical,
     widthPixel,
 } from '../utils/scaling';
-import { debounce } from 'lodash';
-import React, { useImperativeHandle, useState, FC } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import ReactNativeModal from 'react-native-modal';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { refChatList } from './ChatList';
 import ConfirmModal, { refConfirmModal } from './ConfirmModal';
 import GiftItem from './GiftItem';
-import { IGiftItem } from '../dtos';
 
 export interface IGiftListModal {
     data: IGiftItem[];
@@ -33,15 +33,16 @@ const GiftListModal: FC<IGiftListModal> = ({ data = [], onDonate }) => {
         close: () => setVisible(false),
     }));
 
-    const [currentGift, setCurrentGift] = useState(null);
+    const [currentGift, setCurrentGift] = useState<IGiftItem>(null);
 
-    const renderGiftItem = ({ item, index }) => {
+    const renderGiftItem = ({ item, index }: { item: IGiftItem; index: number }) => {
         return (
             <GiftItem
-                number={item.number}
-                icon={item.icon}
+                isGIF={item.gift_type === GiftType.GIF}
+                giftQuantity={item.quantity_remain}
+                icon={item.resource}
                 name={item.name}
-                currency={item.currency}
+                currency={item.coin}
                 onPress={() => onPressGiftItem(item)}
                 hasPicked={item?.id === currentGift?.id}
             />
@@ -63,8 +64,7 @@ const GiftListModal: FC<IGiftListModal> = ({ data = [], onDonate }) => {
             a.value = withTiming(1, { duration: 500 });
             return;
         }
-        if (!currentGift.number) {
-            refChatList.current.startAnimation(currentGift.icon);
+        if (!currentGift.quantity_remain) {
             onDonate?.(currentGift);
             setVisible(false);
             setCurrentGift(null);

@@ -1,8 +1,3 @@
-import { GiftType } from '../enums/giftType';
-import { colors } from '../constants/colors';
-import { defaultStyle } from '../constants/defaultStyle';
-import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
-import { fontPixel, heightPixel, pixelSizeHorizontal, widthPixel } from '../utils/scaling';
 import { get, isEmpty } from 'lodash';
 import AnimatedLottieView from 'lottie-react-native';
 import React, { useImperativeHandle, useState } from 'react';
@@ -17,9 +12,21 @@ import Animated, {
     withSpring,
     withTiming,
 } from 'react-native-reanimated';
+import { colors } from '../constants/colors';
+import { defaultStyle } from '../constants/defaultStyle';
+import { WIDTH_SCREEN } from '../constants/spacing';
+import { IReceiveGiftItem } from '../dtos';
+import { GiftType } from '../enums/giftType';
+import {
+    fontPixel,
+    heightPixel,
+    pixelSizeHorizontal,
+    pixelSizeVertical,
+    widthPixel,
+} from '../utils/scaling';
 
 let timeout;
-export const refGiftFlag = React.createRef<{ startAnimation: (icon: any) => void }>();
+export const refGiftFlag = React.createRef<{ startAnimation: (icon: IReceiveGiftItem) => void }>();
 const GiftFlag = ({}) => {
     const a = useSharedValue(WIDTH_SCREEN);
     const opacity = useSharedValue(1);
@@ -31,12 +38,12 @@ const GiftFlag = ({}) => {
         };
     });
 
-    const [currentIcon, setCurrentIcon] = useState<any>();
+    const [currentIcon, setCurrentIcon] = useState<IReceiveGiftItem>();
     useImperativeHandle(refGiftFlag, () => ({
         startAnimation,
     }));
 
-    const startAnimation = async (lottieIcon: any) => {
+    const startAnimation = async (lottieIcon: IReceiveGiftItem) => {
         cancelAnimation(a);
         cancelAnimation(opacity);
         clearTimeout(timeout);
@@ -44,10 +51,10 @@ const GiftFlag = ({}) => {
         setCurrentIcon(lottieIcon);
         timeout = setTimeout(() => {
             a.value = withSpring(0);
-            a.value = withDelay(3000, withSpring(-WIDTH_SCREEN));
+            a.value = withDelay(5000, withSpring(-WIDTH_SCREEN));
             opacity.value = withDelay(
                 2000,
-                withTiming(0, { duration: 4500 }, () => {
+                withTiming(0, { duration: 5500 }, () => {
                     opacity.value = 1;
                     a.value = WIDTH_SCREEN;
                 }),
@@ -73,18 +80,18 @@ const GiftFlag = ({}) => {
                     {`${get(currentIcon, 'user_name', 'Thuan')} send `}
                 </Text>
                 {!isEmpty(currentIcon) ? (
-                    (currentIcon.type || currentIcon.gift_data.type) === GiftType.GIF ? (
+                    currentIcon.gift_data.gift_type === GiftType.GIF ? (
                         <FastImage
-                            source={{
-                                uri: currentIcon.url ? currentIcon.url : currentIcon.gift_data.url,
-                            }}
+                            source={{ uri: get(currentIcon, 'gift_data.resource') }}
                             style={styles.lottieIcon}
+                            resizeMode={'contain'}
                         />
                     ) : (
                         <AnimatedLottieView
                             autoPlay
-                            source={currentIcon.resource || currentIcon.gift_data.resource}
+                            source={{ uri: get(currentIcon, 'gift_data.resource') }}
                             style={styles.lottieIcon}
+                            resizeMode={'contain'}
                         />
                     )
                 ) : null}
@@ -98,9 +105,7 @@ export default React.memo(GiftFlag);
 
 const styles = StyleSheet.create({
     sendItem: {
-        position: 'absolute',
-        top: HEIGHT_SCREEN / 2 - heightPixel(16),
-        marginLeft: pixelSizeHorizontal(16),
+        marginBottom: pixelSizeVertical(16),
     },
     wrapGiftFlag: {
         width: WIDTH_SCREEN / 1.7,
@@ -114,8 +119,8 @@ const styles = StyleSheet.create({
         borderRadius: fontPixel(20),
     },
     lottieIcon: {
-        width: widthPixel(40),
-        height: widthPixel(40),
+        width: widthPixel(48),
+        height: widthPixel(48),
     },
     count: {
         ...defaultStyle.button1,
