@@ -6,7 +6,10 @@ This library exposes a cross-platform interface for showing live streaming for h
 ## Setup
 
 
-Now we need to install [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
+You must install list lib we're use in lib
+ - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
+ - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
+ - [`react-native-agora`](https://github.com/AgoraIO-Community/react-native-agora#readme). (>v3)
 
 Install the library using yarn:
 
