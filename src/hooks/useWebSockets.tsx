@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
-import { IGiftItem } from '../dtos';
+import { IGiftItem, IUserInfoSocketChat } from '../dtos';
 import { ChanelConcurrent } from './webSocketDTO';
 
 type Props = {
-    _userInfo: any;
+    _userInfo: IUserInfoSocketChat;
     enabled: boolean;
     onConnected?: () => void;
     onReceiveGift?: (gift: any) => void;
@@ -29,14 +29,14 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         ref.current.emit('send_message', {
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
-            chanel_id: userInfo.chanel_id,
+            chanel_id: userInfo.channel_id,
             message,
         });
     };
 
     const send_gift = (giftData: IGiftItem) => {
         ref.current.emit('send_gift', {
-            chanel_id: userInfo.chanel_id,
+            chanel_id: userInfo.channel_id,
             quantity: 99,
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
@@ -46,7 +46,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
 
     const leave_room = () => {
         ref.current.emit('leave_room', {
-            chanel_id: userInfo.chanel_id,
+            chanel_id: userInfo.channel_id,
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
         });
@@ -61,7 +61,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         socket.emit('join_room', {
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
-            chanel_id: userInfo.chanel_id,
+            chanel_id: userInfo.channel_id,
         });
 
         socket.on('connect', e => {
@@ -72,18 +72,18 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         });
 
         socket.on('subscribe.chanel_messages', ({ chanel_id, messages }) => {
-            console.warn('chanel_messages', []);
+            // console.warn('chanel_messages', []);
             const a = messages.reverse();
             setMessages(a);
         });
 
         socket.on('subscribe.new_message', (new_message: any) => {
-            console.warn('new_message', new_message);
+            // console.warn('new_message', new_message);
             setMessages(prev => [new_message, ...prev]);
         });
 
         socket.on('subscribe.receive_gift', (gift: any) => {
-            console.log('receive_gift', JSON.stringify(gift));
+            // console.log('receive_gift', JSON.stringify(gift));
             onReceiveGift?.(gift);
         });
 

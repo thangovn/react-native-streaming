@@ -22,7 +22,7 @@ import { alertOk, alertYesNo } from './utils/alert';
 import { hocDtos, LiveStreamState } from './hoc/dtos';
 import { fetchSignInKey } from './utils/signInKey';
 import Header from './components/Header';
-import { IGiftItem } from './dtos';
+import { IGiftItem, IUserInfoSocketChat } from './dtos';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
@@ -32,11 +32,7 @@ export interface RNAudienceStreamingProps {
         appId: string;
         channelName: string;
     };
-    _userInfoSocketChat: {
-        user_name: string;
-        user_id: string | number | any;
-        chanel_id: string;
-    };
+    _userInfoSocketChat: IUserInfoSocketChat;
 }
 const RNAudienceStreaming = withAudienceStreaming(
     (props: RNAudienceStreamingProps & hocDtos & LiveStreamState) => {

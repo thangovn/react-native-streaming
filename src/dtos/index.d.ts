@@ -24,3 +24,9 @@ export interface IReceiveGiftItem {
     gift_data?: IGiftItem;
     queue_id?: string;
 }
+
+export interface IUserInfoSocketChat {
+    user_name: string;
+    user_id: string | number | any;
+    channel_id: string;
+}

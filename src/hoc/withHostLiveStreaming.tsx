@@ -49,7 +49,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
         componentDidMount() {
             if (isAndroid) {
                 requestCameraAndAudioPermission().then(() => {
-                    console.log('requested!');
+                    // console.log('requested!');
                 });
             }
             this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backAction);
@@ -103,7 +103,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
             // Listen for the UserJoined callback.
             // This callback occurs when the remote user successfully joins the channel.
             this._engine.addListener('UserJoined', (uid, elapsed) => {
-                console.log('UserJoined', uid, elapsed);
+                // console.log('UserJoined', uid, elapsed);
                 const { peerIds } = this.state;
                 if (peerIds.indexOf(uid) === -1) {
                     this.setState({
@@ -115,7 +115,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
             // Listen for the UserOffline callback.
             // This callback occurs when the remote user leaves the channel or drops offline.
             this._engine.addListener('UserOffline', (uid, reason) => {
-                console.log('UserOffline', uid, reason);
+                // console.log('UserOffline', uid, reason);
                 const { peerIds } = this.state;
                 this.setState({
                     // Remove peer ID from state array
@@ -126,7 +126,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
             // Listen for the JoinChannelSuccess callback.
             // This callback occurs when the local user successfully joins the channel.
             this._engine.addListener('JoinChannelSuccess', async (channel, uid, elapsed) => {
-                console.log('JoinChannelSuccess', channel, uid, elapsed);
+                // console.log('JoinChannelSuccess', channel, uid, elapsed);
                 this.setState({
                     joinSucceed: true,
                 });
@@ -141,7 +141,7 @@ const withHostLiveStreaming = <P extends object>(WrappedComponent: React.Compone
             this._engine.addListener(
                 'ConnectionStateChanged',
                 (state: ConnectionStateType, reason: ConnectionChangedReason) => {
-                    console.log('ConnectionStateChanged', state, reason);
+                    // console.log('ConnectionStateChanged', state, reason);
                     this.setState({ connectionState: state });
                 },
             );
