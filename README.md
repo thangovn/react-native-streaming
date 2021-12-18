@@ -104,3 +104,91 @@ export const App = () => {
   );
 };
 ```
+
+Props
+
+#### `configLiveStream` (`required`) (for Host & Viewer)
+
+Config live streaming.
+
+List of possible values:
+
+- `"appId"` (string)
+- `"channelName"` (string)
+
+```js
+<RNBroadCasterStreaming configLiveStream={{ appId, channelName }}  />
+```
+
+#### `_userInfoSocketChat` (`required`) (for Host & Viewer)
+
+Config chat live streaming
+
+List of possible values:
+
+- `"user_name"` (string)
+- `"user_id"` (number)
+- `"chanel_id"` (string)
+
+```js
+<RNBroadCasterStreaming _userInfoSocketChat={{
+                user_name: login_informations.full_name,
+                user_id: login_informations.id,
+                chanel_id: channelName,
+            }}  />
+```
+
+
+#### `uid` (`required`) (for Host)
+
+Pass your host id.
+
+```js
+<RNBroadCasterStreaming uid={'YOUR HOST ID'} />
+```
+
+
+#### `onReceiveGift` (`func`) (for Host & Viewer)
+
+Function called when receive gift
+
+```js
+<RNBroadCasterStreaming onReceiveGift={(gift)=> {...}} />
+```
+
+#### `onCloseStream` (`func`) (for Host & Viewer)
+
+Function called when close stream using to handle Navigation Header go back
+
+```js
+<RNBroadCasterStreaming onCloseStream={() => Navigation.back()} />
+```
+
+#### `onBack` (`func`) (for Host)
+
+Function called when close stream using to handle Navigation Header go back
+
+```js
+<RNBroadCasterStreaming onBack={() => Navigation.back()} />
+```
+
+
+#### `rightIconComposer` (`optional`) (for Host & Viewer)
+
+Add your lottie icon to right composer
+
+```js
+<RNAudienceStreaming rightIconComposer={lottie_gift_box} />
+```
+
+
+#### `giftData` (required) (for Viewer)
+
+Array of list gift items
+
+```js
+<RNAudienceStreaming giftData={data: IGiftItem[]} />
+```
+
+         
+
