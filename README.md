@@ -131,13 +131,13 @@ List of possible values:
 
 - `"user_name"` (string)
 - `"user_id"` (number)
-- `"chanel_id"` (string)
+- `"channel_id"` (string)
 
 ```js
 <RNBroadCasterStreaming _userInfoSocketChat={{
                 user_name: login_informations.full_name,
                 user_id: login_informations.id,
-                chanel_id: channelName,
+                channel_id: channelName,
             }}  />
 ```
 
