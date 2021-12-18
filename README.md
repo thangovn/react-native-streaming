@@ -28,7 +28,7 @@ For Host
 import { RNBroadCasterStreaming } from 'react-native-streaming';
 ```
 
-### Basic usage with state
+### Basic usage for Host
 
 ```js
 import React from 'react';
@@ -61,6 +61,46 @@ export const App = () => {
           cardName={item.game}
           channelLive={item.chanel}
       />
+  );
+};
+```
+
+For Viewer 
+
+```js
+import { RNBroadCasterStreaming } from 'react-native-streaming';
+```
+
+### Basic usage for Viewer
+
+```js
+import React from 'react';
+import { RNAudienceStreaming } from 'react-native-streaming';
+
+const appId = YOUR_APP_ID;
+const channelName = YOUR_CHANNEL_NAME_ID
+
+export const App = () => {
+  ...
+  
+    const onReceiveGift = gift => {};
+    const onSelectGame = () => Navigation.navigate('SCREEN', { item: state });
+    const onPressAvatar = () => Navigation.navigate('SCREEN');
+
+    return (
+        <RNAudienceStreaming
+            onCloseStream={() => Navigation.back()}
+            giftData={get(queryGetGiftAll, 'data', [])}
+            configLiveStream={{ appId: appId, channelName: channelName }}
+            _userInfoSocketChat={{
+                user_name: login_informations.full_name,
+                user_id: login_informations.id,
+                chanel_id: channelName,
+            }}
+            onReceiveGift={onReceiveGift}
+            rightIconComposer={lottie_gift_box}
+        />
+    );
   );
 };
 ```
