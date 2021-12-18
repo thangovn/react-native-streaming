@@ -64,7 +64,7 @@ const GiftItem = ({ icon, name, currency, onPress, hasPicked, giftQuantity, isGI
                 />
             )}
 
-            {!Boolean(giftQuantity) && <GiftBadge count={giftQuantity} />}
+            {Boolean(giftQuantity) && <GiftBadge count={giftQuantity} />}
             {hasPicked ? (
                 <View style={styles.wrapPicked}>
                     <Text style={defaultStyle.sub1}>{currency}</Text>

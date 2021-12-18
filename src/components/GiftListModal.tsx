@@ -64,7 +64,7 @@ const GiftListModal: FC<IGiftListModal> = ({ data = [], onDonate }) => {
             a.value = withTiming(1, { duration: 500 });
             return;
         }
-        if (!currentGift.quantity_remain) {
+        if (currentGift.quantity_remain) {
             onDonate?.(currentGift);
             setVisible(false);
             setCurrentGift(null);
