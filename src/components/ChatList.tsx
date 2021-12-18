@@ -123,7 +123,7 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer }) => {
                         android: {
                             bottom:
                                 keyboardHeight +
-                                heightPixel(keyboardHeight > 0 ? heightPixel(24) : 0),
+                                heightPixel(keyboardHeight > 0 ? heightPixel(24) : heightPixel(32)),
                         },
                     }),
                 },
