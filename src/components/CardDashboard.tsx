@@ -1,10 +1,9 @@
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
-import { fontPixel, pixelSizeHorizontal, widthPixel } from '../utils/scaling';
+import { fontPixel, pixelSizeHorizontal, widthPixel, pixelSizeVertical } from '../utils/scaling';
 import React from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { pixelSizeVertical } from 'react-native-streaming/src/utils/scaling';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const CardDashboard = ({ onSelectGame, url, nameGame, channelLive }) => {

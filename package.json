@@ -21,12 +21,22 @@
         "url": "https://github.com/thuanneotime/react-native-streaming/issues"
     },
     "homepage": "https://github.com/thuanneotime/react-native-streaming#readme",
-    "dependencies": {
-        "react-hook-form": "^7.20.5"
-    },
+    "dependencies": {},
     "peerDependencies": {
         "react": "*",
-        "react-native": "*"
+        "react-native": "*",
+        "react-native-agora": ">=3.5.1",
+        "react-hook-form": ">=7.20.5",
+        "lodash": ">=4.17.21",
+        "lottie-ios": ">=3.2.3",
+        "lottie-react-native": ">=5.0.1",
+        "react-native-fast-image": ">=8.5.11",
+        "react-native-linear-gradient": ">=2.5.6",
+        "react-native-modal": ">=13.0.0",
+        "react-native-reanimated": "2.2.4",
+        "react-native-safe-area-context": ">=3.3.2",
+        "react-native-vector-icons": ">=9.0.0",
+        "rn-android-keyboard-adjust": ">=2.0.0"
     },
     "devDependencies": {
         "react-native": "~0.62.2"
