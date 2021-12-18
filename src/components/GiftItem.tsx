@@ -69,17 +69,37 @@ const GiftItem = ({ icon, name, currency, onPress, hasPicked, giftQuantity, isGI
                 <View style={styles.wrapPicked}>
                     <Text style={defaultStyle.sub1}>{currency}</Text>
                     <View style={styles.wrapActionBtn}>
-                        <Icon
-                            name={'minus-circle'}
-                            color={quantity === 1 ? colors.light.DOVE_GRAY : colors.light.INDIGO}
+                        <Pressable
                             onPress={onPressMinus}
-                        />
+                            hitSlop={{
+                                top: widthPixel(20),
+                                bottom: widthPixel(20),
+                                right: widthPixel(20),
+                                left: widthPixel(20),
+                            }}>
+                            <Icon
+                                name={'minus-circle'}
+                                color={
+                                    quantity === 1 ? colors.light.DOVE_GRAY : colors.light.INDIGO
+                                }
+                            />
+                        </Pressable>
                         <Text style={defaultStyle.sub1}>{quantity}</Text>
-                        <Icon
-                            name={'plus-circle'}
-                            color={quantity === 99 ? colors.light.DOVE_GRAY : colors.light.INDIGO}
+                        <Pressable
                             onPress={onPressPlus}
-                        />
+                            hitSlop={{
+                                top: widthPixel(20),
+                                bottom: widthPixel(20),
+                                right: widthPixel(20),
+                                left: widthPixel(20),
+                            }}>
+                            <Icon
+                                name={'plus-circle'}
+                                color={
+                                    quantity === 99 ? colors.light.DOVE_GRAY : colors.light.INDIGO
+                                }
+                            />
+                        </Pressable>
                     </View>
                 </View>
             ) : (
