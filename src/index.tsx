@@ -133,11 +133,7 @@ export interface RNBroadCasterStreamingProps {
         appId: string;
         channelName: string;
     };
-    _userInfoSocketChat: {
-        user_name: string;
-        user_id: string | number | any;
-        chanel_id: string;
-    };
+    _userInfoSocketChat: IUserInfoSocketChat;
     cardName?: string;
     imageUrl?: string;
     renderWaitingView?: () => JSX.Element;

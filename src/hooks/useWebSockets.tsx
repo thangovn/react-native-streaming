@@ -24,7 +24,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
     const [messages, setMessages] = useState<Message[]>([]);
     const [concurrent, setConcurrent] = useState(0);
 
-    const [userInfo, setUserInfo] = useState<any>(_userInfo);
+    const [userInfo, setUserInfo] = useState<IUserInfoSocketChat>(_userInfo);
     const send = ({ message }) => {
         ref.current.emit('send_message', {
             user_name: userInfo.user_name,
