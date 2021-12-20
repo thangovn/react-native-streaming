@@ -192,5 +192,36 @@ Array of list gift items
 <RNAudienceStreaming giftData={data: IGiftItem[]} />
 ```
 
+## Methods (Imperative API):
+
+#### `refGiftFlag` (for Host & Viewer)
+
+To start animation.
+
+List of possible values:
+
+- `"startAnimation"` ((gift: IReceiveGiftItem) => void)
+
+```js
+const onReceiveGift = gift => {
+  refGiftFlag.current?.startAnimation(action.payload.gift);
+  refChatList.current?.startAnimation(action.payload.gift);
+};
+```
+
+#### `refChatList` (for Host & Viewer)
+
+To start animation.
+
+List of possible values:
+
+- `"startAnimation"` ((gift: IReceiveGiftItem) => void)
+
+```js
+const onReceiveGift = gift => {
+  refGiftFlag.current?.startAnimation(action.payload.gift);
+  refChatList.current?.startAnimation(action.payload.gift);
+};
+```
          
 
