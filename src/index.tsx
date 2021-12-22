@@ -34,8 +34,8 @@ export interface RNAudienceStreamingProps {
     };
     _userInfoSocketChat: IUserInfoSocketChat;
 }
-const RNAudienceStreaming = withAudienceStreaming(
-    (props: RNAudienceStreamingProps & hocDtos & LiveStreamState) => {
+const RNAudienceStreaming: FC<RNAudienceStreamingProps & hocDtos & LiveStreamState> =
+    withAudienceStreaming(props => {
         const {
             rightIconComposer,
             onCloseStream,
@@ -120,8 +120,7 @@ const RNAudienceStreaming = withAudienceStreaming(
                     )}
             </View>
         );
-    },
-);
+    });
 
 export interface RNBroadCasterStreamingProps {
     onBack: () => void;
@@ -143,8 +142,8 @@ export interface RNBroadCasterStreamingProps {
 }
 
 let timeout;
-const RNBroadCasterStreaming = withHostStreaming(
-    (props: RNBroadCasterStreamingProps & hocDtos & LiveStreamState) => {
+const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStreamState> =
+    withHostStreaming(props => {
         const {
             configLiveStream: { appId, channelName },
             _userInfoSocketChat,
@@ -291,8 +290,7 @@ const RNBroadCasterStreaming = withHostStreaming(
                 )}
             </View>
         );
-    },
-);
+    });
 
 const styles = StyleSheet.create({
     body: {

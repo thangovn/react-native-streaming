@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import { FC } from 'react';
 import { refComposer } from './components/Composer';
 import GiftListModal from './components/GiftListModal';
 import { useWebSockets } from './hooks/useWebSockets';
@@ -8,6 +8,7 @@ import withAudienceStreaming from './hoc/withAudienceStreaming';
 import withHostStreaming from './hoc/withHostLiveStreaming';
 import AudienceView from './components/AudienceView';
 import { refChatList } from './components/ChatList';
+import { hocDtos, LiveStreamState } from './hoc/dtos';
 import { IGiftItem, IUserInfoSocketChat } from './dtos';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
@@ -20,7 +21,7 @@ export interface RNAudienceStreamingProps {
     };
     _userInfoSocketChat: IUserInfoSocketChat;
 }
-declare const RNAudienceStreaming: any;
+declare const RNAudienceStreaming: FC<RNAudienceStreamingProps & hocDtos & LiveStreamState>;
 export interface RNBroadCasterStreamingProps {
     onBack: () => void;
     onCloseStream: () => void;
@@ -39,5 +40,5 @@ export interface RNBroadCasterStreamingProps {
     uid: string | number;
     channelLive: string;
 }
-declare const RNBroadCasterStreaming: any;
+declare const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStreamState>;
 export { withAudienceStreaming, withHostStreaming, SwipeList, GiftFlag, useWebSockets, AudienceView, refChatList, refComposer, refGiftFlag, GiftListModal, RNAudienceStreaming, RNBroadCasterStreaming, };
