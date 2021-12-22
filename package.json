@@ -6,10 +6,11 @@
     "module": "./lib/esm/index.js",
     "types": "./lib/esm/index.d.ts",
     "scripts": {
-        "build": "rm -rf ./lib && yarn build:esm && yarn build:cjs && yarn cp:static",
+        "build": "rm -rf ./lib && yarn build:esm && yarn build:cjs && yarn cp:static:esm && yarn cp:static:cjs",
         "build:esm": "tsc",
         "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-        "cp:static": "cp src/assets/icons/* lib/esm/assets/icons && cp src/assets/lotties/*  lib/esm/assets/lotties && rm -rf ./lib/esm/assets/icons/index.ts && rm -rf ./lib/esm/assets/lotties/index.ts",
+        "cp:static:esm": "cp src/assets/icons/* lib/esm/assets/icons && cp src/assets/lotties/*  lib/esm/assets/lotties && rm -rf ./lib/esm/assets/icons/index.ts && rm -rf ./lib/esm/assets/lotties/index.ts",
+        "cp:static:cjs": "cp src/assets/icons/* lib/cjs/assets/icons && cp src/assets/lotties/*  lib/cjs/assets/lotties && rm -rf ./lib/cjs/assets/icons/index.ts && rm -rf ./lib/cjs/assets/lotties/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
