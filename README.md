@@ -19,6 +19,9 @@ Install using yarn:
 $ yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-agora react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake
 ```
 
+I recommend you use lib React Navigation above v5.x.x
+ - [`react-navigation`](https://reactnavigation.org/docs/5.x/getting-started).
+
 
 #### RN >= 0.60
 
