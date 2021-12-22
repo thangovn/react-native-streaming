@@ -24,7 +24,6 @@
     "dependencies": {
         "react-hook-form": ">=7.20.5",
         "lodash": "^4.17.21",
-        "rn-android-keyboard-adjust": ">=2.0.0",
         "socket.io-client": "4.4.0"
     },
     "peerDependencies": {
@@ -40,7 +39,8 @@
         "react-native-safe-area-context": ">=3.3.2",
         "react-native-vector-icons": ">=9.0.0",
         "react-native-agora": ">=3.5.1",
-        "@sayem314/react-native-keep-awake": "^1.0.4"
+        "@sayem314/react-native-keep-awake": "^1.0.4",
+        "rn-android-keyboard-adjust": ">=2.0.0"
     },
     "devDependencies": {
         "typescript": "^4.5.4",
