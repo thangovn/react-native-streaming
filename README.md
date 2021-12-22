@@ -10,6 +10,7 @@ Please follow docs list lib below
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
+ - [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context#readme).
 
 Install using yarn:
 
