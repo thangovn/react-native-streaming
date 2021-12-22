@@ -64,7 +64,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
             chanel_id: userInfo.channel_id,
         });
 
-        socket.on('connect', e => {
+        socket.on('connect', () => {
             // console.warn('connect', socket, e);
             if (onConnected) {
                 onConnected();

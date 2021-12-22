@@ -26,6 +26,11 @@ export const defaultStyle = StyleSheet.create({
         width: widthPixel(spacing.twentyFour),
         height: widthPixel(spacing.twentyFour),
     },
+    icon_36: {
+        width: widthPixel(36),
+        height: widthPixel(36),
+        borderRadius: widthPixel(18),
+    },
     icon_12: {
         width: widthPixel(12),
         height: widthPixel(12),

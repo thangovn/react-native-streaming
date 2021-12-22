@@ -22,6 +22,7 @@ import { alertOk, alertYesNo } from './utils/alert';
 import { hocDtos, LiveStreamState } from './hoc/dtos';
 import { fetchSignInKey } from './utils/signInKey';
 import Header from './components/Header';
+import { activateKeepAwake, deactivateKeepAwake } from '@sayem314/react-native-keep-awake';
 import { IGiftItem, IUserInfoSocketChat } from './dtos';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
@@ -34,8 +35,8 @@ export interface RNAudienceStreamingProps {
     };
     _userInfoSocketChat: IUserInfoSocketChat;
 }
-const RNAudienceStreaming = withAudienceStreaming(
-    (props: RNAudienceStreamingProps & hocDtos & LiveStreamState) => {
+const RNAudienceStreaming: FC<RNAudienceStreamingProps & hocDtos & LiveStreamState> =
+    withAudienceStreaming(props => {
         const {
             rightIconComposer,
             onCloseStream,
@@ -51,6 +52,13 @@ const RNAudienceStreaming = withAudienceStreaming(
                 props.startCall(channelName);
             }, 2000);
         };
+
+        useEffect(() => {
+            activateKeepAwake();
+            return () => {
+                deactivateKeepAwake();
+            };
+        }, []);
 
         useEffect(() => {
             fetchSignInKey(appId)
@@ -120,8 +128,7 @@ const RNAudienceStreaming = withAudienceStreaming(
                     )}
             </View>
         );
-    },
-);
+    });
 
 export interface RNBroadCasterStreamingProps {
     onBack: () => void;
@@ -143,8 +150,8 @@ export interface RNBroadCasterStreamingProps {
 }
 
 let timeout;
-const RNBroadCasterStreaming = withHostStreaming(
-    (props: RNBroadCasterStreamingProps & hocDtos & LiveStreamState) => {
+const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStreamState> =
+    withHostStreaming(props => {
         const {
             configLiveStream: { appId, channelName },
             _userInfoSocketChat,
@@ -167,6 +174,13 @@ const RNBroadCasterStreaming = withHostStreaming(
                 props.init(app_id);
             }, 100);
         };
+
+        useEffect(() => {
+            activateKeepAwake();
+            return () => {
+                deactivateKeepAwake();
+            };
+        }, []);
 
         useEffect(() => {
             fetchSignInKey(appId)
@@ -291,8 +305,7 @@ const RNBroadCasterStreaming = withHostStreaming(
                 )}
             </View>
         );
-    },
-);
+    });
 
 const styles = StyleSheet.create({
     body: {
