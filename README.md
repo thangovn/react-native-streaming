@@ -6,16 +6,21 @@ This library exposes a cross-platform interface for showing live streaming for h
 ## Setup
 
 
-You must install list lib we're use in lib
+Please follow docs list lib below
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
+ - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
+ - [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context#readme).
 
-Install the library using yarn:
+Install using yarn:
 
 ```bash
 # using yarn
-$ yarn add https://github.com/thuanneotime/react-native-streaming.git
+$ yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-agora react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake
 ```
+
+I recommend you use lib React Navigation above v5.x.x
+ - [`react-navigation`](https://reactnavigation.org/docs/5.x/getting-started).
 
 
 #### RN >= 0.60
