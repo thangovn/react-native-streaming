@@ -9,7 +9,6 @@ This library exposes a cross-platform interface for showing live streaming for h
 You must install list lib we're use in lib
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
- - [`react-native-agora`](https://github.com/AgoraIO-Community/react-native-agora#readme). (>v3)
 
 Install the library using yarn:
 
@@ -131,13 +130,13 @@ List of possible values:
 
 - `"user_name"` (string)
 - `"user_id"` (number)
-- `"chanel_id"` (string)
+- `"channel_id"` (string)
 
 ```js
 <RNBroadCasterStreaming _userInfoSocketChat={{
                 user_name: login_informations.full_name,
                 user_id: login_informations.id,
-                chanel_id: channelName,
+                channel_id: channelName,
             }}  />
 ```
 
@@ -193,5 +192,36 @@ Array of list gift items
 <RNAudienceStreaming giftData={data: IGiftItem[]} />
 ```
 
+## Methods (Imperative API):
+
+#### `refGiftFlag` (for Host & Viewer)
+
+To start animation.
+
+List of possible values:
+
+- `"startAnimation"` ((gift: IReceiveGiftItem) => void)
+
+```js
+const onReceiveGift = gift => {
+  refGiftFlag.current?.startAnimation(action.payload.gift);
+  refChatList.current?.startAnimation(action.payload.gift);
+};
+```
+
+#### `refChatList` (for Host & Viewer)
+
+To start animation.
+
+List of possible values:
+
+- `"startAnimation"` ((gift: IReceiveGiftItem) => void)
+
+```js
+const onReceiveGift = gift => {
+  refGiftFlag.current?.startAnimation(action.payload.gift);
+  refChatList.current?.startAnimation(action.payload.gift);
+};
+```
          
 
