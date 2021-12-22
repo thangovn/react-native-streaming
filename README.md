@@ -6,7 +6,7 @@ This library exposes a cross-platform interface for showing live streaming for h
 ## Setup
 
 
-Please follow docs list lib below
+Please follow docs list lib below to setup your React Native project
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
