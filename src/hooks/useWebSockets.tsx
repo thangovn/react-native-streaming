@@ -53,9 +53,8 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
     };
 
     useEffect(() => {
-        if (!enabled) {
-            return;
-        }
+        if (!enabled) return;
+
         const socket = io(SOCKET_URL, { transports: ['websocket'] });
         // console.log(socket, 'd');
         socket.emit('join_room', {
@@ -64,7 +63,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
             chanel_id: userInfo.channel_id,
         });
 
-        socket.on('connect', e => {
+        socket.on('connect', () => {
             // console.warn('connect', socket, e);
             if (onConnected) {
                 onConnected();

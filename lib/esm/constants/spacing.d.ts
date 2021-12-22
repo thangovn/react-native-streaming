@@ -1,0 +1,21 @@
+export declare const spacing: {
+    four: number;
+    six: number;
+    eight: number;
+    ten: number;
+    eleven: number;
+    twelve: number;
+    thirteen: number;
+    fourteen: number;
+    sixteen: number;
+    eighteen: number;
+    twenty: number;
+    twentyFour: number;
+    twentyEight: number;
+    thirty: number;
+    thirtyFive: number;
+    forty: number;
+    image: number;
+};
+export declare const HEIGHT_SCREEN: number;
+export declare const WIDTH_SCREEN: number;

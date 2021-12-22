@@ -16,9 +16,10 @@ interface Props {}
 
 // Define a State interface.
 
-const withAudienceStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+const withAudienceStreaming: any = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
     class ViewerStreaming extends React.PureComponent<P & RNAudienceStreamingProps> {
         _engine?: RtcEngine | any;
+        backHandler: any;
 
         state: LiveStreamState = {
             token: null,

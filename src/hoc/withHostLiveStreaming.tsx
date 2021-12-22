@@ -24,9 +24,10 @@ interface State {
     connectionState: ConnectionStateType;
 }
 
-const withHostLiveStreaming = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
     class HostLiveStreaming extends React.PureComponent<P & RNBroadCasterStreamingProps> {
         _engine?: RtcEngine | any;
+        backHandler: any;
 
         state: LiveStreamState = {
             token: null,
