@@ -44,13 +44,15 @@ const ChatList: FC<Props> = ({ data, onSend, rightIconComposer, currentUserId })
         return (
             <View style={styles.messageItem}>
                 <Text
+                    numberOfLines={1}
                     style={[
                         defaultStyle.subButton,
+                        { maxWidth: WIDTH_SCREEN / 3 },
                         { color: sameUser ? colors.light.JAFFA : colors.light.MainColor },
                     ]}>
                     {`${item.user_name}: `}
                 </Text>
-                <Text style={styles.messageText}>{item.message}</Text>
+                <Text style={styles.messageText}>{` ${item.message}`}</Text>
             </View>
         );
     };

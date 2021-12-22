@@ -18,6 +18,7 @@ const Composer: FC<Props> = ({ onSend, source }) => {
         control,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm<any>();
 
@@ -51,7 +52,7 @@ const Composer: FC<Props> = ({ onSend, source }) => {
                             <Icon
                                 name="send-outline"
                                 size={widthPixel(20)}
-                                color={colors.light.Black}
+                                color={watch('text') ? colors.light.Blue_Spiro : colors.light.Black}
                             />
                         </Pressable>
                     </View>
