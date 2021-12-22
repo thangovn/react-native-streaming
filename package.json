@@ -2,7 +2,9 @@
     "name": "react-native-streaming",
     "version": "1.0.0",
     "description": "react native live streaming for mobile",
-    "main": "src/index.tsx",
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
+    "types": "./lib/esm/index.d.ts",
     "scripts": {
         "build": "rm -rf ./lib && yarn build:esm && yarn build:cjs",
         "build:esm": "tsc",
