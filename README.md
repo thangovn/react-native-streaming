@@ -6,17 +6,12 @@ This library exposes a cross-platform interface for showing live streaming for h
 ## Setup
 
 
-You must install list lib we're use in lib
+Please follow docs list lib below
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
- 
- ```bash
-# using yarn
-$ yarn add react-native-reanimated@2.2.4
-```
 
-Install the library using yarn:
+Install using yarn:
 
 ```bash
 # using yarn
