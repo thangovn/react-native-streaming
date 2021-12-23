@@ -1,6 +1,6 @@
 import React, { useImperativeHandle } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import {
@@ -88,5 +88,10 @@ const styles = StyleSheet.create({
         ...defaultStyle.button2,
         color: colors.WHITE,
         marginVertical: heightPixel(8),
+        ...Platform.select({
+            android: {
+                padding: 0,
+            },
+        }),
     },
 });
