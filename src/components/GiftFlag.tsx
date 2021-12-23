@@ -28,7 +28,7 @@ import {
 let timeout;
 export const refGiftFlag = React.createRef<{ startAnimation: (icon: IReceiveGiftItem) => void }>();
 const GiftFlag = ({}) => {
-    const a = useSharedValue(WIDTH_SCREEN);
+    const a = useSharedValue(WIDTH_SCREEN * 2);
     const opacity = useSharedValue(1);
 
     const animationStyle = useAnimatedStyle(() => {

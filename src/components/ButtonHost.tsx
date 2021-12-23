@@ -1,12 +1,12 @@
+import React from 'react';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
 import { fontPixel, heightPixel, pixelSizeVertical, widthPixel } from '../utils/scaling';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../constants/colors';
 
-const ButtonHost = ({ name, onPress, disabled = false }) => {
+const ButtonHost = ({ name, onPress, disabled = false, backgroundColor }) => {
     return (
-        <Pressable onPress={onPress} style={styles.btn} disabled={disabled}>
+        <Pressable onPress={onPress} style={[styles.btn, { backgroundColor }]} disabled={disabled}>
             <Text style={[defaultStyle.body, { color: colors.WHITE }]}>{name}</Text>
         </Pressable>
     );

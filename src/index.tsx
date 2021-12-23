@@ -1,29 +1,30 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { refComposer } from './components/Composer';
-import GiftListModal from './components/GiftListModal';
+import { activateKeepAwake, deactivateKeepAwake } from '@sayem314/react-native-keep-awake';
+import { debounce, get } from 'lodash';
+import React, { FC, useEffect, useImperativeHandle, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { ConnectionStateType } from 'react-native-agora';
-import { useWebSockets } from './hooks/useWebSockets';
-import GiftFlag, { refGiftFlag } from './components/GiftFlag';
-import SwipeList from './components/SwipeList';
-import withAudienceStreaming from './hoc/withAudienceStreaming';
-import withHostStreaming from './hoc/withHostLiveStreaming';
 import AudienceView from './components/AudienceView';
-import { refChatList } from './components/ChatList';
-import { defaultStyle } from './constants/defaultStyle';
 import BroadCasterView from './components/BroadCasterView';
 import ButtonHost from './components/ButtonHost';
-import HeaderHost from './components/HeaderHost';
-import CardDashboard from './components/CardDashboard';
-import { LiveHeader } from './components/LiveHeader';
-import { colors } from './constants/colors';
-import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
-import { alertOk, alertYesNo } from './utils/alert';
-import { hocDtos, LiveStreamState } from './hoc/dtos';
-import { fetchSignInKey } from './utils/signInKey';
+import CardDashboard, { refCardDashboard } from './components/CardDashboard';
+import { refChatList } from './components/ChatList';
+import { refComposer } from './components/Composer';
+import GiftFlag, { refGiftFlag } from './components/GiftFlag';
+import GiftListModal from './components/GiftListModal';
 import Header from './components/Header';
-import { activateKeepAwake, deactivateKeepAwake } from '@sayem314/react-native-keep-awake';
+import HeaderHost from './components/HeaderHost';
+import { LiveHeader } from './components/LiveHeader';
+import SwipeList from './components/SwipeList';
+import { colors } from './constants/colors';
+import { defaultStyle } from './constants/defaultStyle';
+import { HEIGHT_SCREEN, WIDTH_SCREEN } from './constants/spacing';
 import { IGiftItem, IUserInfoSocketChat } from './dtos';
+import { hocDtos, LiveStreamState } from './hoc/dtos';
+import withAudienceStreaming from './hoc/withAudienceStreaming';
+import withHostStreaming from './hoc/withHostLiveStreaming';
+import { useWebSockets } from './hooks/useWebSockets';
+import { alertOk } from './utils/alert';
+import { fetchSignInKey } from './utils/signInKey';
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
@@ -132,39 +133,42 @@ const RNAudienceStreaming: FC<RNAudienceStreamingProps & hocDtos & LiveStreamSta
 
 export interface RNBroadCasterStreamingProps {
     onBack: () => void;
-    onCloseStream: () => void;
-    onSelectGame: () => void;
-    onPressAvatar: () => void;
     onReceiveGift: (gift: any) => void;
     configLiveStream: {
         appId: string;
         channelName: string;
     };
     _userInfoSocketChat: IUserInfoSocketChat;
-    cardName?: string;
-    imageUrl?: string;
     renderWaitingView?: () => JSX.Element;
     rightIconComposer?: any;
     uid: string | number;
-    channelLive: string;
+    liveStreamItem?: any;
+    _onLiveNow: () => void;
+    _onEndLive: () => void;
+    disabledBtnHost?: boolean;
+    isManualLive?: boolean;
+    bgBtnHost?: string;
 }
 
 let timeout;
+
+const refBroadCaster =
+    React.createRef<{ startLive: ({ channel_id, uid }) => void; endLive: () => void }>();
 const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStreamState> =
     withHostStreaming(props => {
         const {
             configLiveStream: { appId, channelName },
             _userInfoSocketChat,
             onReceiveGift,
-            onSelectGame,
-            onPressAvatar,
-            cardName,
-            imageUrl,
             renderWaitingView,
             rightIconComposer,
-            uid,
             onBack,
-            channelLive,
+            liveStreamItem,
+            _onLiveNow,
+            _onEndLive,
+            disabledBtnHost,
+            isManualLive,
+            bgBtnHost,
         } = props;
 
         const [countDown, setCountDown] = useState(3);
@@ -211,17 +215,21 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
         const onPressCamera = () => props.switchCamera();
         const onPressHelp = () => alertOk({ msg: 'onPressHelp' });
         const onPressShare = () => alertOk({ msg: 'onPressShare' });
-
         const onLiveNow = () => {
-            props.startCall(channelName, uid);
+            if (isManualLive) {
+                _onLiveNow(
+                    refCardDashboard.current.watch('title'),
+                    refCardDashboard.current.watch('description'),
+                );
+            } else {
+                _onLiveNow();
+            }
         };
 
-        const onPressEndLive = () => {
-            alertYesNo({
-                msg: 'Are you sure to end live?',
-                onPressAccept: () => props.endCall(),
-            });
-        };
+        useImperativeHandle(refBroadCaster, () => ({
+            startLive: debounce(({ channel_id, uid }) => props.startCall(channel_id, uid), 750),
+            endLive: () => props.endCall(),
+        }));
 
         const { send, messages, concurrent } = useWebSockets({
             enabled: true,
@@ -246,6 +254,7 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
                         joinSucceed={props.joinSucceed}
                         renderWaitingView={renderWaitingView}
                         channelName={channelName}
+                        thumbnail={get(liveStreamItem, 'thumbnail', '')}
                     />
                 )}
 
@@ -253,7 +262,7 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
                     countDown === 0 ? (
                         <>
                             <LiveHeader
-                                onPressEndLive={onPressEndLive}
+                                onPressEndLive={_onEndLive}
                                 onPressCamera={onPressCamera}
                                 concurrent={concurrent}
                                 joinSucceed={props.joinSucceed}
@@ -287,18 +296,16 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
                         />
                         <View style={styles.body}>
                             <CardDashboard
-                                channelLive={channelLive}
-                                onSelectGame={onSelectGame}
-                                nameGame={cardName}
-                                url={
-                                    imageUrl ||
-                                    'https://cdn.pixabay.com/photo/2021/11/10/18/09/casino-6784520_960_720.jpg'
-                                }
+                                title={get(liveStreamItem, 'title', '')}
+                                description={get(liveStreamItem, 'description', '')}
+                                status={get(liveStreamItem, 'status', '')}
+                                isManualLive={isManualLive}
                             />
                             <ButtonHost
+                                backgroundColor={bgBtnHost}
                                 name={'Live Now'}
                                 onPress={onLiveNow}
-                                disabled={Boolean(props.errInit)}
+                                disabled={disabledBtnHost || Boolean(props.errInit)}
                             />
                         </View>
                     </>
@@ -353,4 +360,5 @@ export {
     GiftListModal,
     RNAudienceStreaming,
     RNBroadCasterStreaming,
+    refBroadCaster,
 };

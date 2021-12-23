@@ -1,5 +1,6 @@
 export const colors = {
     DARK: 'rgb(22, 28, 36)',
+    DARK_50: 'rgb(22, 28, 36, .5)',
     MAIN_COLOR: ['#54A0FD', '#380047'],
     DARK_GRAY_50: '#999999',
     BLUE_SKY: 'rgb(28, 202, 255)',
@@ -52,6 +53,7 @@ export const colors = {
         INDIGO: '#5856D6',
         INDIGO_10: 'rgba(88, 86, 214, 0.1)',
         INDIGO_20: 'rgba(88, 86, 214, 0.2)',
+        INDIGO_80: 'rgba(88, 86, 214, 0.8)',
         EMERALD: '#34C759',
         EMERALD_OPACITY_15: 'rgba(52, 199, 89, 0.15)',
         RED_ORANGE: '#FF3B30',

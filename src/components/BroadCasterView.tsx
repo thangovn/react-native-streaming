@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../constants/colors';
+import { StyleSheet } from 'react-native';
 import { RtcLocalView, VideoRenderMode } from 'react-native-agora';
+import FastImage from 'react-native-fast-image';
+import { colors } from '../constants/colors';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
 
-const BroadCasterView = ({ renderWaitingView, joinSucceed, channelName }) => {
+const BroadCasterView = ({ renderWaitingView, joinSucceed, channelName, thumbnail }) => {
     return joinSucceed ? (
         <RtcLocalView.SurfaceView
             style={styles.video}
@@ -14,7 +15,7 @@ const BroadCasterView = ({ renderWaitingView, joinSucceed, channelName }) => {
     ) : Boolean(renderWaitingView) ? (
         renderWaitingView()
     ) : (
-        <View style={styles.video} />
+        <FastImage source={{ uri: thumbnail }} style={styles.video} />
     );
 };
 

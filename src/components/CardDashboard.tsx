@@ -1,32 +1,67 @@
+import React, { useImperativeHandle } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { colors } from '../constants/colors';
 import { defaultStyle } from '../constants/defaultStyle';
-import { fontPixel, pixelSizeHorizontal, widthPixel, pixelSizeVertical } from '../utils/scaling';
-import React from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {
+    fontPixel,
+    heightPixel,
+    pixelSizeHorizontal,
+    pixelSizeVertical,
+    widthPixel,
+} from '../utils/scaling';
 
-const CardDashboard = ({ onSelectGame, url, nameGame, channelLive }) => {
+export const refCardDashboard = React.createRef<{ watch: (key: any) => void }>();
+const CardDashboard = ({ title = 'N/A', description = '', status, isManualLive }) => {
+    const {
+        control,
+        handleSubmit,
+        reset,
+        watch,
+        formState: { errors },
+    } = useForm<any>();
+
+    useImperativeHandle(refCardDashboard, () => ({
+        watch,
+    }));
     return (
         <View style={styles.container}>
-            <FastImage source={{ uri: url }} style={styles.img} />
-            <View style={styles.wrapRight}>
-                <TextInput
-                    style={styles.input}
-                    placeholder={'Live chanel...'}
-                    placeholderTextColor={colors.light.DUSTY_GRAY}
-                    value={channelLive}
-                />
-                <View style={{ flex: 1 }} />
-                <Pressable style={defaultStyle.flexRow} onPress={onSelectGame}>
-                    <Text style={styles.input}>{nameGame}</Text>
-                    <Icon
-                        name={'chevron-forward-outline'}
-                        size={widthPixel(15)}
-                        color={colors.WHITE}
+            {isManualLive ? (
+                <>
+                    <Controller
+                        name="title"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <TextInput
+                                placeholder={'Title...'}
+                                style={styles.input}
+                                placeholderTextColor={colors.light.DUSTY_GRAY}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
                     />
-                </Pressable>
-            </View>
+                    <Controller
+                        name="description"
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <TextInput
+                                placeholder={'Description...'}
+                                placeholderTextColor={colors.light.DUSTY_GRAY}
+                                style={styles.input}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
+                </>
+            ) : (
+                <>
+                    <Text style={styles.input}>{`Title: ${title}`}</Text>
+                    <Text style={styles.input}>{`Description: ${description}`}</Text>
+                    <Text style={styles.input}>{`Status: ${status}`}</Text>
+                </>
+            )}
         </View>
     );
 };
@@ -40,8 +75,7 @@ const styles = StyleSheet.create({
         borderRadius: fontPixel(10),
     },
     container: {
-        ...defaultStyle.flexRow,
-        backgroundColor: colors.BLACK_30,
+        backgroundColor: colors.light.INDIGO_80,
         padding: fontPixel(8),
         marginHorizontal: pixelSizeHorizontal(16),
         marginTop: pixelSizeVertical(6),
@@ -53,5 +87,6 @@ const styles = StyleSheet.create({
     input: {
         ...defaultStyle.button2,
         color: colors.WHITE,
+        marginVertical: heightPixel(8),
     },
 });

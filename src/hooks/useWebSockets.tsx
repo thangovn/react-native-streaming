@@ -17,7 +17,7 @@ type Message = {
     date: Date;
 };
 
-const SOCKET_URL = 'http://kt.thangovn.com:5000';
+const SOCKET_URL = 'https://rt-staging.thangovn.com';
 
 export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }: Props) => {
     const ref = useRef<any>();
@@ -56,8 +56,9 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         if (!enabled) {
             return;
         }
+
+        setUserInfo(_userInfo);
         const socket = io(SOCKET_URL, { transports: ['websocket'] });
-        // console.log(socket, 'd');
         socket.emit('join_room', {
             user_name: userInfo.user_name,
             user_id: userInfo.user_id,
@@ -65,7 +66,7 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
         });
 
         socket.on('connect', () => {
-            // console.warn('connect', socket, e);
+            // console.warn('connect', socket);
             if (onConnected) {
                 onConnected();
             }
@@ -92,20 +93,12 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
             setConcurrent(chanel_concurrent.concurrent);
         });
 
-        // send_gift
-        // -> send_message -> emit
-        // -> join_room -> emit
-
-        // socket.on('reconnect', () => {
-        //     socket.emit('joinRoom', userId);
-        // });
-
         ref.current = socket;
 
         return () => {
             leave_room();
         };
-    }, [enabled, userInfo]);
+    }, [enabled, _userInfo]);
 
     return {
         send,
