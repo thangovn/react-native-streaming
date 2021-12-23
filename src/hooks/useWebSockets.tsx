@@ -24,31 +24,30 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
     const [messages, setMessages] = useState<Message[]>([]);
     const [concurrent, setConcurrent] = useState(0);
 
-    const [userInfo, setUserInfo] = useState<IUserInfoSocketChat>(_userInfo);
     const send = ({ message }) => {
         ref.current.emit('send_message', {
-            user_name: userInfo.user_name,
-            user_id: userInfo.user_id,
-            chanel_id: userInfo.channel_id,
+            user_name: _userInfo.user_name,
+            user_id: _userInfo.user_id,
+            chanel_id: _userInfo.channel_id,
             message,
         });
     };
 
     const send_gift = (giftData: IGiftItem) => {
         ref.current.emit('send_gift', {
-            chanel_id: userInfo.channel_id,
+            chanel_id: _userInfo.channel_id,
             quantity: 99,
-            user_name: userInfo.user_name,
-            user_id: userInfo.user_id,
+            user_name: _userInfo.user_name,
+            user_id: _userInfo.user_id,
             gift_data: giftData,
         });
     };
 
     const leave_room = () => {
         ref.current.emit('leave_room', {
-            chanel_id: userInfo.channel_id,
-            user_name: userInfo.user_name,
-            user_id: userInfo.user_id,
+            chanel_id: _userInfo.channel_id,
+            user_name: _userInfo.user_name,
+            user_id: _userInfo.user_id,
         });
     };
 
@@ -57,12 +56,11 @@ export const useWebSockets = ({ enabled, onConnected, onReceiveGift, _userInfo }
             return;
         }
 
-        setUserInfo(_userInfo);
         const socket = io(SOCKET_URL, { transports: ['websocket'] });
         socket.emit('join_room', {
-            user_name: userInfo.user_name,
-            user_id: userInfo.user_id,
-            chanel_id: userInfo.channel_id,
+            user_name: _userInfo.user_name,
+            user_id: _userInfo.user_id,
+            chanel_id: _userInfo.channel_id,
         });
 
         socket.on('connect', () => {
