@@ -141,7 +141,6 @@ export interface RNBroadCasterStreamingProps {
     _userInfoSocketChat: IUserInfoSocketChat;
     renderWaitingView?: () => JSX.Element;
     rightIconComposer?: any;
-    uid: string | number;
     liveStreamItem?: any;
     _onLiveNow: () => void;
     _onEndLive: () => void;
