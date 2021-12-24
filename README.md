@@ -48,25 +48,35 @@ export const App = () => {
   ...
   
     const onReceiveGift = gift => {};
-    const onSelectGame = () => Navigation.navigate('SCREEN', { item: state });
-    const onPressAvatar = () => Navigation.navigate('SCREEN');
+    const _onLiveNow = (title?: string, description?: string) => {
+        if (isManualLive) {
+            if (!Boolean(title)) return showNotification('TVN Host', 'Title is required', 'error');
+            refLoading.current?.show();
+            mutationCreateManualLive.mutate({ title });
+        } else {
+            refBroadCaster.current.startLive({
+                channel_id: get(item, 'live_streaming_key', ''),
+                uid: login_informations.id,
+            });
+        }
+    };
+    const _onEndLive = () => {
+      refBroadCaster.current.endLive();
+    }
 
    return (
       <RNBroadCasterStreaming
-          onCloseStream={() => Navigation.back()}
-          configLiveStream={{ appId: appId, channelName: channelName }}
+          configLiveStream={{ appId: appId, channelName: 'YOUR_CHANNEL_NAME_ID' }}
           _userInfoSocketChat={{
               user_name: login_informations.full_name,
               user_id: login_informations.id,
-              chanel_id: channelName,
+              channel_id: 'YOUR_CHANNEL_NAME_ID',
           }}
           onReceiveGift={onReceiveGift}
-          uid={login_informations.id}
-          onPressAvatar={onPressAvatar}
-          onSelectGame={onSelectGame}
           onBack={() => Navigation.back()}
-          cardName={item.game}
-          channelLive={item.chanel}
+          _onLiveNow={_onLiveNow}
+          _onEndLive={_onEndLive}
+          isManualLive={isManualLive}
       />
   );
 };
@@ -91,18 +101,16 @@ export const App = () => {
   ...
   
     const onReceiveGift = gift => {};
-    const onSelectGame = () => Navigation.navigate('SCREEN', { item: state });
-    const onPressAvatar = () => Navigation.navigate('SCREEN');
 
     return (
         <RNAudienceStreaming
             onCloseStream={() => Navigation.back()}
             giftData={get(queryGetGiftAll, 'data', [])}
-            configLiveStream={{ appId: appId, channelName: channelName }}
+            configLiveStream={{ appId: 'YOUR_APP_ID', channelName: 'YOUR_CHANNEL_NAME_ID' }}
             _userInfoSocketChat={{
                 user_name: login_informations.full_name,
                 user_id: login_informations.id,
-                chanel_id: channelName,
+                chanel_id: 'YOUR_CHANNEL_NAME_ID',
             }}
             onReceiveGift={onReceiveGift}
             rightIconComposer={lottie_gift_box}
@@ -124,7 +132,7 @@ List of possible values:
 - `"channelName"` (string)
 
 ```js
-<RNBroadCasterStreaming configLiveStream={{ appId, channelName }}  />
+<RNBroadCasterStreaming configLiveStream={{ appId: 'YOUR_APP_ID', channelName: 'YOUR_CHANNEL_NAME_ID' }}  />
 ```
 
 #### `_userInfoSocketChat` (`required`) (for Host & Viewer)
@@ -141,19 +149,9 @@ List of possible values:
 <RNBroadCasterStreaming _userInfoSocketChat={{
                 user_name: login_informations.full_name,
                 user_id: login_informations.id,
-                channel_id: channelName,
+                channel_id: 'YOUR_CHANNEL_NAME_ID',
             }}  />
 ```
-
-
-#### `uid` (`required`) (for Host)
-
-Pass your host id.
-
-```js
-<RNBroadCasterStreaming uid={'YOUR HOST ID'} />
-```
-
 
 #### `onReceiveGift` (`func`) (for Host & Viewer)
 
@@ -163,7 +161,7 @@ Function called when receive gift
 <RNBroadCasterStreaming onReceiveGift={(gift)=> {...}} />
 ```
 
-#### `onCloseStream` (`func`) (for Host & Viewer)
+#### `onCloseStream` (`func`) (for Viewer)
 
 Function called when close stream using to handle Navigation Header go back
 
@@ -227,6 +225,34 @@ const onReceiveGift = gift => {
   refGiftFlag.current?.startAnimation(action.payload.gift);
   refChatList.current?.startAnimation(action.payload.gift);
 };
+```
+
+#### `refBroadCaster` (for Host)
+
+List of possible values:
+
+- `"startLive"` (({ channel_id, uid }) => void)
+
+```js
+const _onLiveNow = (title?: string, description?: string) => {
+    if (isManualLive) {
+        if (!Boolean(title)) return showNotification('TVN Host', 'Title is required', 'error');
+        refLoading.current?.show();
+        mutationCreateManualLive.mutate({ title });
+    } else {
+        refBroadCaster.current.startLive({
+            channel_id: get(item, 'live_streaming_key', ''),
+            uid: login_informations.id,
+        });
+    }
+};
+```
+- `"endLive"` (() => void)
+
+```js
+const _onEndLive = () => {
+      refBroadCaster.current.endLive();
+   };
 ```
          
 
