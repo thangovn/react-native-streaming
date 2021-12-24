@@ -18,15 +18,23 @@ const AudienceView = ({ onClose, connection, concurrent, peerIds, channelName })
             />
 
             {connection === ConnectionStateType.Connecting ? (
-                <IndicatorLoading backgroundColor={colors.light.MIRAGE} />
-            ) : connection === ConnectionStateType.Connected && Boolean(peerIds.length) ? (
-                <RtcRemoteView.SurfaceView
-                    style={styles.remoteView}
-                    uid={peerIds[0]}
-                    channelId={channelName}
-                    renderMode={VideoRenderMode.Hidden}
-                    zOrderMediaOverlay={true}
-                />
+                <View style={styles.flex}>
+                    <Text style={styles.failText}>{'Connecting...'}</Text>
+                </View>
+            ) : connection === ConnectionStateType.Connected ? (
+                !Boolean(peerIds.length) ? (
+                    <View style={styles.flex}>
+                        <Text style={styles.failText}>{'Stream Not Available'}</Text>
+                    </View>
+                ) : (
+                    <RtcRemoteView.SurfaceView
+                        style={styles.remoteView}
+                        uid={peerIds[0]}
+                        channelId={channelName}
+                        renderMode={VideoRenderMode.Hidden}
+                        zOrderMediaOverlay={true}
+                    />
+                )
             ) : connection === ConnectionStateType.Disconnected ? (
                 <View style={styles.flex}>
                     <Text style={styles.failText}>{'Stream Disconnected'}</Text>
