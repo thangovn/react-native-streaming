@@ -9,6 +9,32 @@ This library exposes a cross-platform interface for showing live streaming for h
 Please follow docs list lib below to setup your React Native project
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
+ For iOS:
+ ```
+ <key>UIAppFonts</key>
+ <array>
+   <string>AntDesign.ttf</string>
+   <string>Entypo.ttf</string>
+   <string>EvilIcons.ttf</string>
+   <string>Feather.ttf</string>
+   <string>FontAwesome.ttf</string>
+   <string>FontAwesome5_Brands.ttf</string>
+   <string>FontAwesome5_Regular.ttf</string>
+   <string>FontAwesome5_Solid.ttf</string>
+   <string>Foundation.ttf</string>
+   <string>Ionicons.ttf</string>
+   <string>MaterialIcons.ttf</string>
+   <string>MaterialCommunityIcons.ttf</string>
+   <string>SimpleLineIcons.ttf</string>
+   <string>Octicons.ttf</string>
+   <string>Zocial.ttf</string>
+   <string>Fontisto.ttf</string>
+ </array>
+ ```
+ For Android: Edit `android/app/build.gradle` 
+ ```
+ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+ ```
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
  - [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context#readme).
 
