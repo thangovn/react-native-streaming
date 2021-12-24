@@ -77,7 +77,7 @@ const GiftFlag = ({}) => {
                     ]}
                 />
                 <Text style={[defaultStyle.subButton, { color: colors.light.White }]}>
-                    {`${get(currentIcon, 'user_name', 'Thuan')} send `}
+                    {`${get(currentIcon, 'user_name', 'Thuan')} sent `}
                 </Text>
                 {!isEmpty(currentIcon) ? (
                     currentIcon.gift_data.gift_type === GiftType.GIF ? (

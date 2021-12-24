@@ -106,7 +106,7 @@ const GiftListModal: FC<IGiftListModal> = ({ data = [], onDonate }) => {
                         {'Please choose a gift!'}
                     </Animated.Text>
                     <Pressable style={styles.wrapDonate} onPress={pressDonate}>
-                        <Text style={styles.donateText}>{'Donate'}</Text>
+                        <Text style={styles.donateText}>{'Send'}</Text>
                     </Pressable>
                 </View>
                 <ConfirmModal />
