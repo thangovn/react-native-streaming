@@ -8,6 +8,52 @@ This library exposes a cross-platform interface for showing live streaming for h
 
 Please follow docs list lib below to setup your React Native project
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
+ 
+ For iOS:
+ 
+Add Reanimated's babel plugin to your babel.config.js:
+```
+module.exports = {
+      ...
+      plugins: [
+          ...
+          'react-native-reanimated/plugin',
+      ],
+  };
+```
+ For Android: 
+ 1. Turn on Hermes engine by editing android/app/build.gradle:
+ ```
+ project.ext.react = [
+  enableHermes: true  // <- here | clean and rebuild if changing
+]
+ ```
+ 2. Plug Reanimated in MainApplication.java:
+ ```
+   import com.facebook.react.bridge.JSIModulePackage; // <- add
+  import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
+  ...
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+  ...
+
+      @Override
+      protected String getJSMainModuleName() {
+        return "index";
+      }
+
+      @Override
+      protected JSIModulePackage getJSIModulePackage() {
+        return new ReanimatedJSIModulePackage(); // <- add
+      }
+    };
+  ...
+ ```
+ 
+ If you receive Error: `Error: Reanimated 2 failed to create a worklet, maybe you forgot to add Reanimated's babel plugin?` please run 
+ ```
+ yarn start --reset-cache
+ ```
+ 
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
  For iOS:
  ```
