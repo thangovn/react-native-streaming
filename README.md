@@ -148,6 +148,12 @@ export const App = () => {
           _onLiveNow={_onLiveNow}
           _onEndLive={_onEndLive}
           isManualLive={isManualLive}
+          liveStreamItem={{
+            thumbnail: null,
+            title: 'vip',
+            description: 'description',
+            status: 'On Air',
+          }}
       />
   );
 };
@@ -223,6 +229,17 @@ List of possible values:
                 channel_id: 'YOUR_CHANNEL_NAME_ID',
             }}  />
 ```
+
+#### `liveStreamItem` (`optinal`) (for Host)
+
+Config info live
+
+List of possible values:
+
+- `"thumbnail"` (string)
+- `"title"` (string)
+- `"description"` (string)
+- `"status"` (string)
 
 #### `onReceiveGift` (`func`) (for Host & Viewer)
 
