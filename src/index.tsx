@@ -2,7 +2,7 @@ import { activateKeepAwake, deactivateKeepAwake } from '@sayem314/react-native-k
 import { debounce, get } from 'lodash';
 import React, { FC, useEffect, useImperativeHandle, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ConnectionStateType } from 'react-native-agora';
+import { ConnectionStateType } from '../tvn/index';
 import AudienceView from './components/AudienceView';
 import BroadCasterView from './components/BroadCasterView';
 import ButtonHost from './components/ButtonHost';
