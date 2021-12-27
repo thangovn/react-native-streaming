@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { RtcLocalView, VideoRenderMode } from '../../tvn/index';
+import { RtcLocalView, VideoRenderMode } from 'react-native-tvn';
 import FastImage from 'react-native-fast-image';
 import { colors } from '../constants/colors';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
