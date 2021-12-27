@@ -6,7 +6,7 @@ import { fontPixel, heightPixel, pixelSizeHorizontal, widthPixel } from '../util
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ConnectionStateType } from 'react-native-tvn';
+import { ConnectionStateType } from 'react-native-tvn-sdk';
 
 const Header = ({ onPress, concurrent = 0, connection, peerIds }) => {
     const { top } = useSafeAreaInsets();

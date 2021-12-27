@@ -6,7 +6,7 @@ import RtcEngine, {
     ClientRole,
     ConnectionChangedReason,
     ConnectionStateType,
-} from 'react-native-tvn';
+} from 'react-native-tvn-sdk';
 import { requestCameraAndAudioPermission } from '../utils/permissions';
 import { LiveStreamState } from './dtos';
 import { RNAudienceStreamingProps } from '../index';
