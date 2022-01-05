@@ -5,7 +5,7 @@ import RtcEngine, {
     ClientRole,
     ConnectionChangedReason,
     ConnectionStateType,
-} from 'react-native-agora';
+} from 'react-native-tvn-host';
 import { requestCameraAndAudioPermission } from '../utils/permissions';
 import { LiveStreamState } from './dtos';
 import { RNBroadCasterStreamingProps } from '../index';

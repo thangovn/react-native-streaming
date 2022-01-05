@@ -1,4 +1,4 @@
-import { ConnectionStateType } from 'react-native-agora';
+import { ConnectionStateType } from 'react-native-tvn-host';
 
 export interface hocDtos {
     init?: (appId: string) => void;
