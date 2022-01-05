@@ -34,7 +34,6 @@ const SwipeList = ({ dataMessage, onSend, rightIconComposer, currentUserId }) =>
             renderItem={renderItem}
             keyExtractor={(item, index) => `${index}`}
             data={[{ key: 'first' }, { key: 'second' }]}
-            style={{ position: 'absolute', width: '100%', height: '100%' }}
             pagingEnabled
             horizontal
             showsHorizontalScrollIndicator={false}

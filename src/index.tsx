@@ -2,7 +2,7 @@ import { activateKeepAwake, deactivateKeepAwake } from '@sayem314/react-native-k
 import { debounce, get } from 'lodash';
 import React, { FC, useEffect, useImperativeHandle, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ConnectionStateType } from 'react-native-agora';
+import { ConnectionStateType, RtcLocalView } from 'react-native-tvn-host';
 import AudienceView from './components/AudienceView';
 import BroadCasterView from './components/BroadCasterView';
 import ButtonHost from './components/ButtonHost';
@@ -25,6 +25,7 @@ import withHostStreaming from './hoc/withHostLiveStreaming';
 import { useWebSockets } from './hooks/useWebSockets';
 import { alertOk } from './utils/alert';
 import { fetchSignInKey } from './utils/signInKey';
+
 export interface RNAudienceStreamingProps {
     onCloseStream: () => void;
     onReceiveGift: (gift: any) => void;
@@ -137,6 +138,7 @@ export interface RNBroadCasterStreamingProps {
     configLiveStream: {
         appId: string;
         channelName: string;
+        appSecondId: string;
     };
     _userInfoSocketChat: IUserInfoSocketChat;
     renderWaitingView?: () => JSX.Element;
@@ -156,7 +158,7 @@ const refBroadCaster =
 const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStreamState> =
     withHostStreaming(props => {
         const {
-            configLiveStream: { appId, channelName },
+            configLiveStream: { appId, channelName, appSecondId },
             _userInfoSocketChat,
             onReceiveGift,
             renderWaitingView,
@@ -172,10 +174,11 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
 
         const [countDown, setCountDown] = useState(3);
 
-        const initial = (app_id: string) => {
+        const initial = async (app_id: string, appSecondId: string) => {
+            await props.init(app_id, appSecondId);
             setTimeout(() => {
-                props.init(app_id);
-            }, 100);
+                props.initBeauty(appSecondId);
+            }, 500);
         };
 
         useEffect(() => {
@@ -188,7 +191,7 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
         useEffect(() => {
             fetchSignInKey(appId)
                 .then(key => {
-                    initial(key);
+                    initial(key, appSecondId);
                 })
                 .catch();
         }, [appId]);
@@ -250,75 +253,79 @@ const RNBroadCasterStreaming: FC<RNBroadCasterStreamingProps & hocDtos & LiveStr
                     </View>
                 ) : (
                     <BroadCasterView
-                        joinSucceed={props.joinSucceed}
+                        joinSucceed={props.initSuccess}
                         renderWaitingView={renderWaitingView}
                         channelName={channelName}
                         thumbnail={get(liveStreamItem, 'thumbnail', '')}
                     />
                 )}
-
-                {props.joinSucceed ? (
-                    countDown === 0 ? (
-                        <>
+                <RtcLocalView.RTCTVNBeautyButtonView
+                    style={{
+                        position: 'absolute',
+                        zIndex: 9999999999,
+                        width: WIDTH_SCREEN,
+                        height: HEIGHT_SCREEN / 1.8,
+                    }}>
+                    {props.joinSucceed ? (
+                        countDown === 0 ? (
                             <LiveHeader
                                 onPressEndLive={_onEndLive}
                                 onPressCamera={onPressCamera}
                                 concurrent={concurrent}
                                 joinSucceed={props.joinSucceed}
                             />
-                            <SwipeList
-                                currentUserId={_userInfoSocketChat.user_id}
-                                dataMessage={messages}
-                                onSend={onSend}
-                                rightIconComposer={rightIconComposer}
-                            />
-                        </>
+                        ) : (
+                            <View style={styles.wrapCountDown}>
+                                <Text style={styles.countDown}>{countDown}</Text>
+                            </View>
+                        )
                     ) : (
-                        <View style={styles.wrapCountDown}>
-                            <Text style={styles.countDown}>{countDown}</Text>
-                        </View>
-                    )
+                        <>
+                            <HeaderHost
+                                onBack={onBack}
+                                rightComponent={[
+                                    {
+                                        icon: 'share-social-outline',
+                                        onPress: onPressShare,
+                                    },
+                                    {
+                                        icon: 'help-circle-outline',
+                                        onPress: onPressHelp,
+                                    },
+                                ]}
+                            />
+                            <View style={styles.body}>
+                                <CardDashboard
+                                    title={get(liveStreamItem, 'title', '')}
+                                    description={get(liveStreamItem, 'description', '')}
+                                    status={get(liveStreamItem, 'status', '')}
+                                    isManualLive={isManualLive}
+                                />
+                            </View>
+                        </>
+                    )}
+                </RtcLocalView.RTCTVNBeautyButtonView>
+                {props.joinSucceed ? (
+                    <SwipeList
+                        currentUserId={_userInfoSocketChat.user_id}
+                        dataMessage={messages}
+                        onSend={onSend}
+                        rightIconComposer={rightIconComposer}
+                    />
                 ) : (
-                    <>
-                        <HeaderHost
-                            onBack={onBack}
-                            rightComponent={[
-                                {
-                                    icon: 'share-social-outline',
-                                    onPress: onPressShare,
-                                },
-                                {
-                                    icon: 'help-circle-outline',
-                                    onPress: onPressHelp,
-                                },
-                            ]}
-                        />
-                        <View style={styles.body}>
-                            <CardDashboard
-                                title={get(liveStreamItem, 'title', '')}
-                                description={get(liveStreamItem, 'description', '')}
-                                status={get(liveStreamItem, 'status', '')}
-                                isManualLive={isManualLive}
-                            />
-                            <ButtonHost
-                                backgroundColor={bgBtnHost}
-                                name={'Live Now'}
-                                onPress={onLiveNow}
-                                disabled={disabledBtnHost || Boolean(props.errInit)}
-                            />
-                        </View>
-                    </>
+                    <ButtonHost
+                        backgroundColor={bgBtnHost}
+                        name={'Live Now'}
+                        onPress={onLiveNow}
+                        disabled={disabledBtnHost || Boolean(props.errInit)}
+                    />
                 )}
             </View>
         );
     });
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        justifyContent: 'space-between',
-        zIndex: 999,
-    },
+    body: {},
     countDown: {
         ...defaultStyle.heading4,
         color: colors.WHITE,

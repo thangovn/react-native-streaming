@@ -4,7 +4,7 @@ import { defaultStyle } from '../constants/defaultStyle';
 import { HEIGHT_SCREEN, WIDTH_SCREEN } from '../constants/spacing';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ConnectionStateType, RtcRemoteView, VideoRenderMode } from 'react-native-agora';
+import { ConnectionStateType, RtcRemoteView, VideoRenderMode } from 'react-native-tvn-sdk';
 import Header from './Header';
 
 const AudienceView = ({ onClose, connection, concurrent, peerIds, channelName }) => {

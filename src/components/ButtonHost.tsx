@@ -24,5 +24,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: fontPixel(8),
         marginBottom: heightPixel(32),
+        position: 'absolute',
+        bottom: 0,
     },
 });
