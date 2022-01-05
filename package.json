@@ -38,7 +38,6 @@
         "react-native-modal": ">=13.0.0",
         "react-native-safe-area-context": ">=3.3.2",
         "react-native-vector-icons": ">=9.0.0",
-        "react-native-tvn-sdk": "https://github.com/thuanneotime/react-native-tvn-sdk.git",
         "react-native-tvn-host": "https://github.com/thuanneotime/react-native-tvn-host.git",
         "@sayem314/react-native-keep-awake": "^1.0.4",
         "rn-android-keyboard-adjust": ">=2.0.0"
