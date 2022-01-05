@@ -37,6 +37,7 @@ const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.Co
             switchCamera: true,
             connectionState: ConnectionStateType.Connecting,
             errInit: null,
+            initSuccess: false,
         };
 
         onClose = async () => {
@@ -66,7 +67,7 @@ const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.Co
 
         _endCall = async () => {
             await this._engine?.leaveChannel();
-            this.setState({ peerIds: [], joinSucceed: false });
+            this.setState({ peerIds: [], joinSucceed: false, initSuccess: false });
         };
 
         _switchCamera = () => {
@@ -79,6 +80,10 @@ const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.Co
                 .catch(err => {
                     console.warn('switchCamera', err);
                 });
+        };
+
+        _initBeauty = async (key: string) => {
+            await this._engine.initTiSDK(key);
         };
 
         // Pass in your App ID through this.state, create and initialize an RtcEngine object.
@@ -146,6 +151,8 @@ const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.Co
                     this.setState({ connectionState: state });
                 },
             );
+
+            this.setState({ initSuccess: true });
         };
 
         render(): React.ReactNode {
@@ -157,6 +164,7 @@ const withHostLiveStreaming: any = <P extends object>(WrappedComponent: React.Co
                     startCall={this._startCall}
                     endCall={this._endCall}
                     switchCamera={this._switchCamera}
+                    initBeauty={this._initBeauty}
                 />
             );
         }
