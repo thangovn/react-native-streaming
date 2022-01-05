@@ -8,15 +8,86 @@ This library exposes a cross-platform interface for showing live streaming for h
 
 Please follow docs list lib below to setup your React Native project
  - [`react-native-reanimated`](https://github.com/kmagiera/react-native-reanimated). (v2.2.4)
+ 
+ For iOS:
+ 
+Add Reanimated's babel plugin to your babel.config.js:
+```
+module.exports = {
+      ...
+      plugins: [
+          ...
+          'react-native-reanimated/plugin',
+      ],
+  };
+```
+ For Android: 
+ 1. Turn on Hermes engine by editing android/app/build.gradle:
+ ```
+ project.ext.react = [
+  enableHermes: true  // <- here | clean and rebuild if changing
+]
+ ```
+ 2. Plug Reanimated in MainApplication.java:
+ ```
+   import com.facebook.react.bridge.JSIModulePackage; // <- add
+  import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
+  ...
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+  ...
+
+      @Override
+      protected String getJSMainModuleName() {
+        return "index";
+      }
+
+      @Override
+      protected JSIModulePackage getJSIModulePackage() {
+        return new ReanimatedJSIModulePackage(); // <- add
+      }
+    };
+  ...
+ ```
+ 
+ If you receive Error: `Error: Reanimated 2 failed to create a worklet, maybe you forgot to add Reanimated's babel plugin?` please run 
+ ```
+ yarn start --reset-cache
+ ```
+ 
  - [`react-native-vector-icons`](https://github.com/oblador/react-native-vector-icons).
+ For iOS:
+ ```
+ <key>UIAppFonts</key>
+ <array>
+   <string>AntDesign.ttf</string>
+   <string>Entypo.ttf</string>
+   <string>EvilIcons.ttf</string>
+   <string>Feather.ttf</string>
+   <string>FontAwesome.ttf</string>
+   <string>FontAwesome5_Brands.ttf</string>
+   <string>FontAwesome5_Regular.ttf</string>
+   <string>FontAwesome5_Solid.ttf</string>
+   <string>Foundation.ttf</string>
+   <string>Ionicons.ttf</string>
+   <string>MaterialIcons.ttf</string>
+   <string>MaterialCommunityIcons.ttf</string>
+   <string>SimpleLineIcons.ttf</string>
+   <string>Octicons.ttf</string>
+   <string>Zocial.ttf</string>
+   <string>Fontisto.ttf</string>
+ </array>
+ ```
+ For Android: Edit `android/app/build.gradle` 
+ ```
+ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+ ```
  - [`lottie-react-native`](https://github.com/lottie-react-native/lottie-react-native).
  - [`react-native-safe-area-context`](https://github.com/th3rdwave/react-native-safe-area-context#readme).
 
 Install using yarn:
 
 ```bash
-# using yarn
-$ yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-agora react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake rn-android-keyboard-adjust
+yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-agora react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake rn-android-keyboard-adjust
 ```
 
 I recommend you use lib React Navigation above v5.x.x
@@ -77,6 +148,12 @@ export const App = () => {
           _onLiveNow={_onLiveNow}
           _onEndLive={_onEndLive}
           isManualLive={isManualLive}
+          liveStreamItem={{
+            thumbnail: null,
+            title: 'vip',
+            description: 'description',
+            status: 'On Air',
+          }}
       />
   );
 };
@@ -152,6 +229,17 @@ List of possible values:
                 channel_id: 'YOUR_CHANNEL_NAME_ID',
             }}  />
 ```
+
+#### `liveStreamItem` (`optinal`) (for Host)
+
+Config info live
+
+List of possible values:
+
+- `"thumbnail"` (string)
+- `"title"` (string)
+- `"description"` (string)
+- `"status"` (string)
 
 #### `onReceiveGift` (`func`) (for Host & Viewer)
 
