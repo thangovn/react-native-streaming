@@ -87,7 +87,7 @@ module.exports = {
 Install using yarn:
 
 ```bash
-yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-agora react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake rn-android-keyboard-adjust
+yarn add https://github.com/thuanneotime/react-native-streaming.git lottie-ios lottie-react-native react-native-fast-image react-native-tvn-host react-native-tvn-viewer react-native-linear-gradient react-native-modal react-native-reanimated@2.2.4 react-native-safe-area-context react-native-vector-icons @sayem314/react-native-keep-awake rn-android-keyboard-adjust
 ```
 
 I recommend you use lib React Navigation above v5.x.x
